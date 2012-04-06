@@ -1,5 +1,6 @@
 import com.plivo.bridge.to.command.ApplicationResponse;
 import com.plivo.bridge.to.command.Speak;
+import com.plivo.bridge.to.command.Message;
 import javax.xml.bind.Marshaller;
 
 
@@ -21,6 +22,16 @@ public class PlivoXml {
         // <Response>
         // <Speak loop="8" voice="MAN" language="en_US">Calling from Plivo</Speak>
         // </Response>
+        //
+        ApplicationResponse responseMessage = new ApplicationResponse();
+
+        Message messageElement = new Message();
+        messageElement.setsrc("1231213123");
+        messageElement.setdst("144232322");
+        messageElement.settype("sms");
+
+        responseMessage.setMessage(messageElement);
+
 
     }
 }
