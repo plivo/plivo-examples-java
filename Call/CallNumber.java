@@ -17,7 +17,7 @@ public class CallNumber {
 		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
 		params.put("from", "xxxxxxxxxx");
 		params.put("to", "xxxxxxxxxx");
-		params.put("answer_url", "http://www.myxmlserver.com/Hangup.xml");
+		params.put("answer_url", "http://dl.dropbox.com/u/54579287/Docs/speak.xml");
 
 		Call response;
 		try {
