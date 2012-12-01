@@ -13,8 +13,7 @@ public class HangupCall {
 		// Set the various attributes for Speak
  		speak.setLanguage("en-US");
  		speak.setVoice("WOMAN");
- 		speak.setText("Press one for English");
- 		speak.setText("Press two for Spanish");
+ 		speak.setText("Press one for English. Press two for Spanish");
  		
 		// Set the various attributes for GetDigits
  		getdigits.setAction("http://myserverurl/input/");
