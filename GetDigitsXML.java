@@ -19,9 +19,9 @@ public class HangupCall {
  		getdigits.setAction("http://myserverurl/input/");
  		getdigits.setMethod("GET");
 		// Add speak to GetDigits
- 		getdigits.setSpeak(speak);
+ 		getdigits.addSpeak(speak);
  		
- 		response.setGetDigits(getdigits);
+ 		response.addGetDigits(getdigits);
 
  		System.out.println(response.serializeToXML());
 	}

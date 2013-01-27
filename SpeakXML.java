@@ -14,7 +14,7 @@ public class HangupCall {
  		speak.setText("Hi, Plivo calling.");
  		
 		// Use dial in response
- 		response.setSpeak(speak);
+ 		response.addSpeak(speak);
 
  		System.out.println(response.serializeToXML());
 	}

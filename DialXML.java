@@ -14,12 +14,12 @@ public class DialXML {
 		number.setNumber("12345678901");
 
 		// Set up dial
- 		dial.setNumber(number);
+ 		dial.addNumber(number);
  		dial.setAction("http://http://myserverurl/setredirect/");
  		dial.setMethod("GET");
 
 		// Make the final response
- 		response.setDial(dial);
+ 		response.addDial(dial);
  		
  		System.out.println(response.serializeToXML());
 	}
