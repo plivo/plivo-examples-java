@@ -2,9 +2,9 @@ package plivo.helper;
 
 import java.util.LinkedHashMap;
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.number.NumberSearchFactory;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.number.NumberSearchFactory;
 
 public class SearchAvailableNumbers {
 
@@ -31,7 +31,7 @@ public class SearchAvailableNumbers {
 		try 
 		{
 			numbers = restAPI.searchNumberGroups(params);
-			System.out.println(numbers.numberList.get(0).groupID);
+			System.out.println(numbers.numberList.get(0).groupId);
 		}
 		catch (PlivoException plivoException) 
 		{

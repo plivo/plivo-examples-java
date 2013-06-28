@@ -1,11 +1,11 @@
 package com.plivo.helper;
 
-import com.plivo.sdk.xml.elements.Response;
-import com.plivo.sdk.xml.elements.Speak;
+import com.plivo.helper.xml.elements.PlivoResponse;
+import com.plivo.helper.xml.elements.Speak;
 
 public class HangupCall {
  	public static void main(String[] args) {
- 		Response response = new Response();
+ 		PlivoResponse response = new PlivoResponse();
  		Speak speak = new Speak();
  		
 		// Set various attributes for speak

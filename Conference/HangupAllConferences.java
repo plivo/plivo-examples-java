@@ -1,8 +1,8 @@
 package plivo.helper;
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.response.GenericResponse;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.response.GenericResponse;
 
 public class HangupAllConferences {
 
@@ -18,7 +18,7 @@ public class HangupAllConferences {
 		try 
 		{
 			genResponse = restAPI.hangupAllConferences();
-			System.out.println(genResponse.apiID);
+			System.out.println(genResponse.apiId);
 		} 
 		catch (PlivoException plivoException) {
 			plivoException.printStackTrace();

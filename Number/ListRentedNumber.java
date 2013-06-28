@@ -1,9 +1,9 @@
 package plivo.helper;
 
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.number.NumberSearchFactory;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.number.NumberSearchFactory;
 
 public class ListRentedNumber {
 

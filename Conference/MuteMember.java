@@ -2,9 +2,9 @@ package plivo.helper;
 
 import java.util.LinkedHashMap;
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.response.GenericResponse;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.response.GenericResponse;
 
 public class MuteMember {
 
@@ -30,7 +30,7 @@ public class MuteMember {
 		try 
 		{
 			response =  restAPI.muteMember(params);
-			System.out.println(response.apiID);
+			System.out.println(response.apiId);
 		}
 		catch (PlivoException plivoException) 
 		{

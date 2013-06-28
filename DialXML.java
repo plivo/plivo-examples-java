@@ -1,12 +1,12 @@
 package com.plivo.helper;
 
-import com.plivo.sdk.xml.elements.Response;
-import com.plivo.sdk.xml.elements.Dial;
-import com.plivo.sdk.xml.elements.Number;
+import com.plivo.helper.xml.elements.PlivoResponse;
+import com.plivo.helper.xml.elements.Dial;
+import com.plivo.helper.xml.elements.Number;
 
 public class DialXML {
  	public static void main(String[] args) {
- 		Response response = new Response();
+ 		PlivoResponse response = new PlivoResponse();
 		Dial dial = new Dial(); 		
  		Number number = new Number();
 

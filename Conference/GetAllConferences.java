@@ -1,8 +1,8 @@
 package plivo.helper;
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.conference.LiveConferenceList;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.conference.LiveConferenceList;
 
 public class GetAllConferences {
 
@@ -18,7 +18,7 @@ public class GetAllConferences {
 		try 
 		{
 			liveConferenceList = restAPI.getLiveConferences();
-			System.out.println(liveConferenceList.apiID);
+			System.out.println(liveConferenceList.apiId);
 			for (String conferenceName : liveConferenceList.conferences)
 			{
 				System.out.println("Conference name : " + conferenceName);
@@ -28,7 +28,6 @@ public class GetAllConferences {
 		{			
 			e.printStackTrace();
 		}
-
 
 	}
 

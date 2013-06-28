@@ -2,9 +2,9 @@ package plivo.helper;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.number.Number;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.number.Number;
 
 
 public class RentedNumberDetails {

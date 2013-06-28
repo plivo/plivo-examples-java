@@ -1,9 +1,9 @@
 package plivo.helper;
 
 import java.util.LinkedHashMap;
-import com.plivo.sdk.client.RestAPI;
-import com.plivo.sdk.exception.PlivoException;
-import com.plivo.sdk.response.call.Call;
+import com.plivo.helper.api.client.RestAPI;
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.api.response.call.Call;
 
 public class CallNumber {
 
@@ -23,7 +23,7 @@ public class CallNumber {
 		try {
 
 			response = restAPI.makeCall(params);
-			System.out.println(response.apiID);
+			System.out.println(response.apiId);
 		} 
 		catch (PlivoException e) {
 			System.out.println(e.getMessage());
