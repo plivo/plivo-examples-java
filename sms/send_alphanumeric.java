@@ -22,14 +22,15 @@ public class SendAlphanumeric {
         parameters.put("text", "Hi, from Plivo"); // Your SMS text message
         
         try {
+            // Send the Message
             MessageResponse msgResponse = api.sendMessage(parameters);
+            // Print the Api ID
             System.out.println("Api ID : " + msgResponse.apiId);
+            // Print the Response Message
             System.out.println("Message : " + msgResponse.message);
             if (msgResponse.serverCode == 202) {
-                int count = msgResponse.messageUuids.size();
-                for (int i = 0 ; i < count ; i++){
-                    System.out.println("Message UUID : " + msgResponse.messageUuids.get(i).toString());
-                }
+                // Print the Message UUID
+                System.out.println("Message UUID : " + msgResponse.messageUuids.get(i).toString());
             } else {
                 System.out.println(msgResponse.error); 
             }
