@@ -45,7 +45,19 @@ public class LongMessage {
             System.out.println("Message : " + msgResponse.message);
             if (msgResponse.serverCode == 202) {
                 // Print the Message UUID
-                System.out.println("Message UUID : " + msgResponse.messageUuids.get(i).toString());
+                String uuid = msgResponse.messageUuids.get(i).toString();
+                System.out.println("Message UUID : " + uuid);
+
+                RestAPI apis = new RestAPI(authId, authToken, "v1");
+
+                LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+                params.put("record_id", uuid); // Message UUID for which the details have to be retrieved
+                
+                // Get the details of the sent message
+                Message msg = apis.getMessage(params);
+
+                // Print the number of units
+                System.out.println("Units : " + msg.units);
             } else {
                 System.out.println(msgResponse.error); 
             }
@@ -60,4 +72,5 @@ public class LongMessage {
 Api ID : 68865376-a20a-11e4-b932-22000ac50fac
 Message : message(s) queued
 Message UUID : 689c7430-a20a-11e4-b328-22000afd044b
+Units : 2
 */

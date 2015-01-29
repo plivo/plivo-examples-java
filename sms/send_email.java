@@ -13,14 +13,17 @@ public class App {
     public static void main(String[] args) {
         get("/forward_sms", (req,res) -> {
             try{
-                String from_number = req.queryParams("From");
-                String to_number = req.queryParams("To");
-                String text = req.queryParams("Text");
+                String from_number = req.queryParams("From"); // Sender's phone number
+                String to_number = req.queryParams("To"); // Receiver's phone number - Plivo number
+                String text = req.queryParams("Text"); // The text which was received
                 
+                // Print the message
                 System.out.printf("From : %s, To : %s, Text : %s ", from_number, to_number, text);
                 
+                // Send the received SMS to your mail account
                 String result = App.sendEmail(text);
                 
+                // Print the result
                 return result;
                 
             }
@@ -87,4 +90,13 @@ public class App {
         }
     }
 }
+
+// Sample Output
+/*
+From : 1111111111
+To : 2222222222
+Text : Hi, from Plivo
+
+Sent message successfully!
+*/
 
