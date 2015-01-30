@@ -29,6 +29,9 @@ public class SendMessage {
         try {
             // Send the message
             MessageResponse msgResponse = api.sendMessage(parameters);
+
+            // Print the response
+            System.out.print(getFields(msgResponse));
             // Print the Api ID
             System.out.println("Api ID : " + msgResponse.apiId);
             // Print the Response Message
@@ -44,10 +47,33 @@ public class SendMessage {
             System.out.println(e.getLocalizedMessage());
         }
     }
+
+    // Get all the fields in the Response
+    public static String getFields(Object obj) throws IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field f : fields) {
+          if (!Modifier.isStatic(f.getModifiers())) {
+            f.setAccessible(true);
+            Object value = f.get(obj);
+            buffer.append(f.getName());
+            buffer.append("=");
+            buffer.append("" + value);
+            buffer.append("\n");
+          }
+        }
+        return buffer.toString();
+    }
 }
 
 // Sample Output
 /*
+serverCode=202
+message=message(s) queued
+messageUuids=[6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c]
+error=null
+apiId=6a143d9a-a87a-11e4-96e3-22000abcb9af
+
 Api ID : dbda0556-a206-11e4-a2d1-22000ac5040c
 Message : message(s) queued
 Message UUID : dbf3b582-a206-11e4-b328-22000afd044b

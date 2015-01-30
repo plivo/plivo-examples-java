@@ -39,13 +39,16 @@ public class LongMessage {
         try {
             // Send the Message
             MessageResponse msgResponse = api.sendMessage(parameters);
+
+            // Print the response
+            System.out.print(getFields(msgResponse));
             // Send the Api ID
             System.out.println("Api ID : " + msgResponse.apiId);
             // Send the Response Message
             System.out.println("Message : " + msgResponse.message);
             if (msgResponse.serverCode == 202) {
                 // Print the Message UUID
-                String uuid = msgResponse.messageUuids.get(i).toString();
+                String uuid = msgResponse.messageUuids.get(0).toString();
                 System.out.println("Message UUID : " + uuid);
 
                 RestAPI apis = new RestAPI(authId, authToken, "v1");
@@ -65,12 +68,42 @@ public class LongMessage {
             System.out.println(e.getLocalizedMessage());
         }
     }
+
+    // Get all the fields in the Response
+    public static String getFields(Object obj) throws IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field f : fields) {
+          if (!Modifier.isStatic(f.getModifiers())) {
+            f.setAccessible(true);
+            Object value = f.get(obj);
+            buffer.append(f.getName());
+            buffer.append("=");
+            buffer.append("" + value);
+            buffer.append("\n");
+          }
+        }
+        return buffer.toString();
+    }
 }
 
 // Sample Output
 /*
-Api ID : 68865376-a20a-11e4-b932-22000ac50fac
+serverCode=202
+message=message(s) queued
+messageUuids=[242de67c-a87b-11e4-890b-22000aec819c]
+error=null
+apiId=241029e8-a87b-11e4-96e3-22000abcb9af
+
+Api ID : 241029e8-a87b-11e4-96e3-22000abcb9af
 Message : message(s) queued
-Message UUID : 689c7430-a20a-11e4-b328-22000afd044b
+Message UUID : 242de67c-a87b-11e4-890b-22000aec819c
+// Output for English
 Units : 2
+
+// Output for Japanes
+Units : 3
+
+// Output for French
+Units : 5
 */

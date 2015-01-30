@@ -23,27 +23,46 @@ public class GetDetails {
             Message msg = api.getMessage(parameters);
 
             // Print the Message Details
-            System.out.println("Api ID : " + msg.apiId);
-            System.out.println("From Number : " + msg.fromNumber);
-            System.out.println("To Number : " + msg.toNumber);
-            System.out.println("Message Direction : " + msg.messageDirection);
-            System.out.println("Message State : " + msg.messageState);
-            System.out.println("Message UUID : " + msg.messageUUID);
-            System.out.println("Units : " + msg.units);
+            System.out.println(getFields(msg));
             
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
     }
+
+    // Get all the fields in the Response
+    public static String getFields(Object obj) throws IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field f : fields) {
+          if (!Modifier.isStatic(f.getModifiers())) {
+            f.setAccessible(true);
+            Object value = f.get(obj);
+            buffer.append(f.getName());
+            buffer.append("=");
+            buffer.append("" + value);
+            buffer.append("\n");
+          }
+        }
+        return buffer.toString();
+    }
 }
 
 // Sample Output
 /*
-Api ID : 39022fde-a215-11e4-b932-22000ac50fac
-From Number : 1111111111
-To Number : 2222222222
-Message Direction : outbound
-Message State : delivered
-Message UUID : 0936ec98-7c4c-11e4-9bd8-22000afa12b9
-Units : 4
+cloudRate=null
+carrierRate=null
+messageDirection=outbound
+toNumber=919663489033
+messageState=delivered
+totalAmount=0.02600
+fromNumber=18583650866
+messageUUID=0936ec98-7c4c-11e4-9bd8-22000afa12b9
+messageTime=2014-12-05 10:57:54+04:00
+resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/0936ec98-7c4c-11e4-9bd8-22000afa12b9/
+messageType=sms
+totalRate=0.00650
+units=4
+error=null
+apiId=67d1cf58-a87e-11e4-b423-22000ac8a2f8
 */
