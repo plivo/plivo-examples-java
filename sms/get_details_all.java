@@ -119,31 +119,15 @@ apiId=null
 
 Sample Ouput with filter
 
-Api ID : f8e692e0-a87d-11e4-b153-22000abcaa64
+Api ID : ecfd64ce-a880-11e4-a2d1-22000ac5040c
 Meta
 previous=null
-totalCount=479
+totalCount=96
 offset=0
 limit=2
-next=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Message/?limit=2&offset=2
+next=/v1/Account/XXXXXXXXXXXXXXX/Message/?message_state=sent&limit=2&offset=2&message_direction=outbound
 
 Objects
-cloudRate=null
-carrierRate=null
-messageDirection=outbound
-toNumber=447441906862
-messageState=delivered
-totalAmount=0.03680
-fromNumber=ALPHA
-messageUUID=9d787344-a87b-11e4-890b-22000aec819c
-messageTime=2015-01-30 16:29:20+04:00
-resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Message/9d787344-a87b-11e4-890b-22000aec819c/
-messageType=sms
-totalRate=0.03680
-units=1
-error=null
-apiId=null
-
 cloudRate=null
 carrierRate=null
 messageDirection=outbound
@@ -153,10 +137,26 @@ totalAmount=0.00700
 fromNumber=18583650866
 messageUUID=242de67c-a87b-11e4-890b-22000aec819c
 messageTime=2015-01-30 16:25:56+04:00
-resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Message/242de67c-a87b-11e4-890b-22000aec819c/
+resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/242de67c-a87b-11e4-890b-22000aec819c/
 messageType=sms
 totalRate=0.00350
 units=2
+error=null
+apiId=null
+
+cloudRate=null
+carrierRate=null
+messageDirection=outbound
+toNumber=14155069431
+messageState=sent
+totalAmount=0.00350
+fromNumber=18583650866
+messageUUID=6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c
+messageTime=2015-01-30 16:20:44+04:00
+resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c/
+messageType=sms
+totalRate=0.00350
+units=1
 error=null
 apiId=null
 
