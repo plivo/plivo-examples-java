@@ -24,6 +24,12 @@ public class GetDetails {
 
             // Print the Message Details
             System.out.println(getFields(msg));
+
+            // Print the number of SMS units
+            System.out.println("Units : " + msg.units);
+
+            // Print the state of the message
+                System.out.println("Message State : " + msg.messageState);
             
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
@@ -65,4 +71,7 @@ totalRate=0.00650
 units=4
 error=null
 apiId=67d1cf58-a87e-11e4-b423-22000ac8a2f8
+
+Units : 4
+Message State : delivered
 */
