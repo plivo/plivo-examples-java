@@ -35,7 +35,7 @@ public class SendAlphanumeric {
 
         // Filtering the records
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("limit", "10"); // The number of results per page
+        parameters.put("limit", "2"); // The number of results per page
         parameters.put("offset", "0"); // The number of value items by which the results should be offset
         parameters.put("message_state", "sent"); // The state of the message to be filtered
         parameters.put("message_direction", "outbound"); // The direction of te message to be fltered
