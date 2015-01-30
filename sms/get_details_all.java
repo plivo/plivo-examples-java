@@ -35,8 +35,10 @@ public class SendAlphanumeric {
 
         // Filtering the records
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("limit", "10"); // Alphanumeric Sender ID
-        parameters.put("offset", "0"); // Receiver's phone number with country code
+        parameters.put("limit", "10"); // The number of results per page
+        parameters.put("offset", "0"); // The number of value items by which the results should be offset
+        parameters.put("message_state", "sent"); // The state of the message to be filtered
+        parameters.put("message_direction", "outbound"); // The direction of te message to be fltered
 
         try {
             MessageFactory msg = api.getMessages(parameters);
@@ -131,10 +133,10 @@ Objects
 cloudRate=null
 carrierRate=null
 messageDirection=outbound
-toNumber=14155069431
+toNumber=1111111111
 messageState=sent
 totalAmount=0.00700
-fromNumber=18583650866
+fromNumber=2222222222
 messageUUID=242de67c-a87b-11e4-890b-22000aec819c
 messageTime=2015-01-30 16:25:56+04:00
 resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/242de67c-a87b-11e4-890b-22000aec819c/
@@ -147,10 +149,10 @@ apiId=null
 cloudRate=null
 carrierRate=null
 messageDirection=outbound
-toNumber=14155069431
+toNumber=2222222222
 messageState=sent
 totalAmount=0.00350
-fromNumber=18583650866
+fromNumber=1111111111
 messageUUID=6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c
 messageTime=2015-01-30 16:20:44+04:00
 resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c/
