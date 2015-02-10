@@ -58,7 +58,9 @@ public class App {
             int count = resp.endpointList.size();
             for (int i = 0 ; i < count; i++){
                 System.out.println(getFields(resp.endpointList.get(i)));
-            } 
+            }
+            // Print the total number of endpoints
+            System.out.println("Total count : " + resp.meta.total_count);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }

@@ -12,7 +12,7 @@ import com.plivo.helper.exception.PlivoException;
 
 public class App {
     public static void main(String[] args) throws IllegalAccessException {
-        // TODO Auto-generated method stub
+
         String auth_id = "Your AUTH_ID";
         String auth_token = "Your AUTH_TOKEN";
         
@@ -125,7 +125,7 @@ public class App {
                 System.out.println(getFields(resp.subAccountList.get(i)));
             }     
             //  Print the total number of apps
-            System.out.println("Total count : " + resp.meta.totalCount);
+            System.out.println("Total count : " + resp.meta.total_count);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
@@ -222,6 +222,12 @@ public class App {
         message=no response
         error=null
         apiId=unknown
+
+        Unsuccessful Output
+        serverCode=404
+        message=null
+        error=not found
+        apiId=198b7aa8-b119-11e4-b423-22000ac8a2f8
         */
     }
 
