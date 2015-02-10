@@ -19,9 +19,9 @@ public class App {
         RestAPI api = new RestAPI(auth_id, auth_token, "v1");
         
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("username","testEndpoint");
-        parameters.put("password","test123");
-        parameters.put("alias","testEndpoint");
+        parameters.put("username","testEndpoint"); // The username for the endpoint to be created
+        parameters.put("password","test123"); // The password for your endpoint username
+        parameters.put("alias","testEndpoint"); // Alias for this endpoint
         
         // Create an Endpoint
         try {
@@ -46,8 +46,8 @@ public class App {
 
         // Get details of all existing endpoints
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("limit","2");
-        parameters.put("offset","0");
+        parameters.put("limit","2"); // The number of results per page
+        parameters.put("offset","0"); // The number of value items by which the results should be offset
 
         try {
             EndpointFactory resp = api.getEndpoints(parameters);
@@ -71,7 +71,7 @@ public class App {
         totalCount=3
         offset=0
         limit=2
-        next=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Endpoint/?limit=2&offset=2
+        next=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
 
         Objects : 
         serverCode=null
@@ -80,7 +80,7 @@ public class App {
         alias=testEndpoint
         endpointId=20762201543927
         password=cc03e747a6afbbcbf8be7668acfebee5
-        resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Endpoint/20762201543927/
+        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/20762201543927/
         apiId=null
         error=null
 
@@ -90,7 +90,7 @@ public class App {
         alias=TestSample
         endpointId=24753112937214
         password=147538da338b770b61e592afc92b1ee6
-        resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Endpoint/24753112937214/
+        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/24753112937214/
         apiId=null
         error=null
 
@@ -99,7 +99,7 @@ public class App {
 
         // Get details of a single endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927");
+        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint for which the details have to be retrieved
 
         try {
             Endpoint resp = api.getEndpoint(parameters);
@@ -116,15 +116,15 @@ public class App {
         alias=testEndpoint
         endpointId=20762201543927
         password=cc03e747a6afbbcbf8be7668acfebee5
-        resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Endpoint/20762201543927/
+        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/20762201543927/
         apiId=8ed90146-b118-11e4-ac1f-22000ac51de6
         error=null
         */
 
         // Modify an endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927");
-        parameters.put("alias","NewName");
+        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint that has to be modified
+        parameters.put("alias","NewName"); // Values that have to be updated
 
         try {
             GenericResponse resp = api.editEndpoint(parameters);
@@ -143,7 +143,7 @@ public class App {
 
         // Delete an Endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927");
+        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint that as to be deleted
 
         try {
             GenericResponse resp = api.deleteEndpoint(parameters);
