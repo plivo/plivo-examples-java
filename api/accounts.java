@@ -124,6 +124,8 @@ public class App {
             for (int i = 0 ; i < count; i++){
                 System.out.println(getFields(resp.subAccountList.get(i)));
             }     
+            //  Print the total number of apps
+            System.out.println("Total count : " + resp.meta.totalCount);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
@@ -174,13 +176,9 @@ public class App {
         isEnabled=true
         lastModifiedOn=null
         name=Ramya
+
+        Total count : 3
         */
-
-        //  Print the total number of apps
-        System.out.println(resp.meta.totalCount);
-
-        // Sample Output
-        // 3
 
         // Get details of a particular sub acount
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
