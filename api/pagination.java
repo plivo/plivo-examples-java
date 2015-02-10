@@ -70,3 +70,21 @@ public class App {
         Browse https://api.plivo.com/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
         to view the next page of results. To traverse pages, browse the 'next' and 'previous' urls
         */
+    }
+
+    public static String getFields(Object obj) throws IllegalAccessException {
+        StringBuffer buffer = new StringBuffer();
+        Field[] fields = obj.getClass().getDeclaredFields();
+        for (Field f : fields) {
+          if (!Modifier.isStatic(f.getModifiers())) {
+            f.setAccessible(true);
+            Object value = f.get(obj);
+            buffer.append(f.getName());
+            buffer.append("=");
+            buffer.append("" + value);
+            buffer.append("\n");
+          }
+        }
+        return buffer.toString();
+    }
+}
