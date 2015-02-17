@@ -33,7 +33,7 @@ public class receiveSms extends HttpServlet {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
-        context.addServlet(new ServletHolder(new Main()),"/receive_sms");
+        context.addServlet(new ServletHolder(new receiveSms()),"/receive_sms");
         server.start();
         server.join();
     }
