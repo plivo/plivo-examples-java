@@ -19,7 +19,6 @@ public class App {
        // LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
         
         try {
-            // Send the message
             LiveCallFactory lc = api.getLiveCalls();
             System.out.println("API ID : " + lc.apiId);
             System.out.println("liveCallList");
