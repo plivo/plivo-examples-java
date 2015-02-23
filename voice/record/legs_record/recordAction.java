@@ -25,6 +25,6 @@ public class recordAction extends HttpServlet {
 }
 
 /*
-Saple Output
+Sample Output
 Record URL : http://s3.amazonaws.com/recordings_2013/55556666-7777-11e4-a4c8-782bcb5bb8af.mp3 Recording Duration : 27 Recording ID : daddbf04-9585-11e4-a4c8-782bcb5bb8af 
 */
