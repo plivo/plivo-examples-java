@@ -36,13 +36,13 @@ public class dialOutbound extends HttpServlet {
             RestAPI api2 = new RestAPI(authId, authToken, "v1");
             
             LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-            parameters.put("call_uuid", call_uuid);
-            parameters.put("callback_url", "https://dry-fortress-4047.herokuapp.com/recording_callback");
-            parameters.put("callback_method", "GET");
+            parameters.put("call_uuid", call_uuid); // ID of the call
+            parameters.put("callback_url", "https://dry-fortress-4047.herokuapp.com/recording_callback"); // The URL invoked by the API when the recording ends
+            parameters.put("callback_method", "GET"); // The method which is used to invoke the callback_url URL
             
             LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-            params.put("call_uuid", call_uuid);
-            params.put("urls", "https://s3.amazonaws.com/plivocloud/Trumpet.mp3");
+            params.put("call_uuid", call_uuid); // ID of the call
+            params.put("urls", "https://s3.amazonaws.com/plivocloud/Trumpet.mp3"); // A single URL or a list of comma separated URLs pointing to an mp3 or wav file
             
             try{
                 Record record = api1.record(parameters);

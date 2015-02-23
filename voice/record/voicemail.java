@@ -21,12 +21,12 @@ public class voicemail extends HttpServlet {
         
         PlivoResponse response = new PlivoResponse();
         Record record = new Record();
-        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action");
-        record.setMethod("GET");
-        record.setMaxLength(30);
-        record.setTranscriptionType("auto");
-        record.setTranscriptionUrl("https://dry-fortress-4047.herokuapp.com/transcription");
-        record.setTranscriptionMethod("GET");
+        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action"); // Submit the result of the record to this URL
+        record.setMethod("GET"); // Submit to action url using GET or POST
+        record.setMaxLength(30); // Maximum number of seconds to record 
+        record.setTranscriptionType("auto"); // The type of transcription required.
+        record.setTranscriptionUrl("https://dry-fortress-4047.herokuapp.com/transcription"); // The URL where the transcription while be sent from Plivo.
+        record.setTranscriptionMethod("GET"); // The method used to invoke transcriptionUrl.
         
         Speak speak = new Speak("Leave your message after the tone");
         

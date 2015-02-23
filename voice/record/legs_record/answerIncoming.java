@@ -29,16 +29,16 @@ public class answerIncoming extends HttpServlet {
         
         PlivoResponse response = new PlivoResponse();
         Record record = new Record();
-        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action");
-        record.setMethod("GET");
-        record.setRedirect(false);
-        record.setRecordSession(true);
+        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action"); // Submit the result of the record to this URL
+        record.setMethod("GET"); // Submit to action url using GET or POST
+        record.setRedirect(false); // If false, don't redirect to action url, only request the url and continue to next element.
+        record.setRecordSession(true); // Record current call session in background 
         Wait wait = new Wait();
-        wait.setLength(5);
+        wait.setLength(5); // Time to wait in seconds
         Speak spk = new Speak("Connecting your call!");
         Dial dial = new Dial();
-        dial.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/dial_outbound");
-        dial.setCallbackMethod("GET");
+        dial.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/dial_outbound"); // URL that is notified by Plivo when one of the following events occur: called party is bridged with caller, called party hangs up, caller has pressed any digit
+        dial.setCallbackMethod("GET"); // Method used to notify callbackUrl
         Number num = new Number("919663489033");
         
         try {

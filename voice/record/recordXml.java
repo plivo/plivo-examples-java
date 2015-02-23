@@ -22,10 +22,10 @@ public class recordXml extends HttpServlet {
                 
         PlivoResponse response = new PlivoResponse();
         Record record = new Record();
-        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action");
-        record.setMethod("GET");
-        record.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/recording_callback");
-        record.setCallbackMethod("GET");
+        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action"); // Submit the result of the record to this URL
+        record.setMethod("GET"); // Submit to action url using GET or POST
+        record.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/recording_callback"); // If set, this URL is fired in background when the recorded file is ready to be used. 
+        record.setCallbackMethod("GET"); // Method used to notify the callbackUrl.
         
         try {
             response.append(record);

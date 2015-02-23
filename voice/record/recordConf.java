@@ -20,10 +20,10 @@ public class recordConf extends HttpServlet {
         
         PlivoResponse response = new PlivoResponse();
         Speak spk = new Speak("You will now be placed into a demo conference. This is brought to you by Plivo. To know more visit us at plivo.com");
-        Conference conf = new Conference("demo");
-        conf.setEnterSound("beep:2");
-        conf.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/conf_callback");
-        conf.setCallbackMethod("GET");
+        Conference conf = new Conference("demo"); // Name of the Conference
+        conf.setEnterSound("beep:2"); // Used to play a sound when a member enters the conference
+        conf.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/conf_callback"); // If specified, information is sent back to this URL
+        conf.setCallbackMethod("GET"); // Method used to notify callbackUrl using GET or POST.
         
         try {
             response.append(spk);
@@ -95,7 +95,7 @@ public class recordConfCallback extends HttpServlet {
             RestAPI api = new RestAPI(authId, authToken, "v1");
             
             LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-            parameters.put("conference_name", conf_name);
+            parameters.put("conference_name", conf_name); // Name of the conference
             
             try{
                 Record recordconf = api.recordConference(parameters);
