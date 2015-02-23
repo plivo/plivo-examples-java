@@ -53,3 +53,12 @@ public class forwardCall extends HttpServlet {
         server.join();
     }
 }
+
+/*
+Sample Output
+<Response>
+<Dial callerId="null">
+<Number>2222222222</Number>
+</Dial>
+</Response>
+*/
