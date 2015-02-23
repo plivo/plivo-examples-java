@@ -89,12 +89,13 @@ public class detect extends HttpServlet {
             response.append(spk);
             System.out.println(response.toXML());
             resp.addHeader("Content-Type", "text/xml");
-            resp.getWriter().print(response.toXML());;
+            resp.getWriter().print(response.toXML());
         } catch (PlivoException e) {
             e.printStackTrace();
         }       
     }
 
+    public static void main(String[] args) throws Exception {
         String port = System.getenv("PORT");
         if(port==null)
             port ="8000";
