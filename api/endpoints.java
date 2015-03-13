@@ -26,22 +26,25 @@ public class App {
         // Create an Endpoint
         try {
             Endpoint resp = api.createEndpoint(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=201
-        username=testEndpoint150210112609
-        sipUri=null
-        alias=testEndpoint
-        endpointId=20762201543927
-        password=null
-        resourceUri=null
-        apiId=9c2c6b54-b117-11e4-ac1f-22000ac51de6
-        error=null
+        Endpoint [
+            serverCode=201, 
+            username=testEndpoint150310115033, 
+            sipUri=null, 
+            alias=testEndpoint, 
+            endpointId=22386716736727, 
+            password=null, 
+            resourceUri=null, 
+            apiId=a8650632-c71b-11e4-b932-22000ac50fac, 
+            error=null, 
+            message=created
+        ]
         */
 
         // Get details of all existing endpoints
@@ -51,14 +54,7 @@ public class App {
 
         try {
             EndpointFactory resp = api.getEndpoints(parameters);
-            System.out.println("API ID : " + resp.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(resp.meta));
-            System.out.println("Objects : ");
-            int count = resp.endpointList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(resp.endpointList.get(i)));
-            }
+            System.out.println(resp);
             // Print the total number of endpoints
             System.out.println("Total count : " + resp.meta.total_count);
         }catch (PlivoException e){
@@ -67,121 +63,123 @@ public class App {
 
         /*
         Sample Output
-        API ID : 07de6488-b118-11e4-b153-22000abcaa64
-        Meta : 
-        previous=null
-        totalCount=3
-        offset=0
-        limit=2
-        next=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
-
-        Objects : 
-        serverCode=null
-        username=testEndpoint150210112609
-        sipUri=sip:testEndpoint150210112609@phone.plivo.com
-        alias=testEndpoint
-        endpointId=20762201543927
-        password=cc03e747a6afbbcbf8be7668acfebee5
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/20762201543927/
-        apiId=null
-        error=null
-
-        serverCode=null
-        username=test150108095716
-        sipUri=sip:test150108095716@phone.plivo.com
-        alias=TestSample
-        endpointId=24753112937214
-        password=147538da338b770b61e592afc92b1ee6
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/24753112937214/
-        apiId=null
-        error=null
-
-        Total count : 3
+        EndpointFactory [
+            serverCode=200, 
+            meta=EndpointMeta [
+                previous=null, 
+                totalCount=4, 
+                offset=0, 
+                limit=2, 
+                next=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
+            ], 
+            error=null, 
+            apiId=0dceba7c-c71c-11e4-ac1f-22000ac51de6, 
+            endpointList=[
+                Endpoint [
+                    serverCode=null, 
+                    username=testEndpoint150310115033, 
+                    sipUri=sip:testEndpoint150310115033@phone.plivo.com, 
+                    alias=testEndpoint, 
+                    endpointId=22386716736727, 
+                    password=cc03e747a6afbbcbf8be7668acfebee5, 
+                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/22386716736727/, 
+                    apiId=null, 
+                    error=null, 
+                    message=null
+                ], 
+                Endpoint [
+                    serverCode=null, 
+                    username=testEndpoint123150310113848, 
+                    sipUri=sip:testEndpoint123150310113848@phone.plivo.com, 
+                    alias=testEndpoint123, 
+                    endpointId=59627429467949, 
+                    password=cc03e747a6afbbcbf8be7668acfebee5, 
+                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/59627429467949/, 
+                    apiId=null, 
+                    error=null, 
+                    message=null
+                ]
+            ]
+        ]
+        Total count : 4
         */
 
         // Get details of a single endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint for which the details have to be retrieved
+        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint for which the details have to be retrieved
 
         try {
             Endpoint resp = api.getEndpoint(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=200
-        username=testEndpoint150210112609
-        sipUri=sip:testEndpoint150210112609@phone.plivo.com
-        alias=testEndpoint
-        endpointId=20762201543927
-        password=cc03e747a6afbbcbf8be7668acfebee5
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/20762201543927/
-        apiId=8ed90146-b118-11e4-ac1f-22000ac51de6
-        error=null
+        Endpoint [
+            serverCode=200, 
+            username=testEndpoint150310115033, 
+            sipUri=sip:testEndpoint150310115033@phone.plivo.com, 
+            alias=testEndpoint, 
+            endpointId=22386716736727, 
+            password=cc03e747a6afbbcbf8be7668acfebee5, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/22386716736727/, 
+            apiId=647de046-c71c-11e4-b932-22000ac50fac, 
+            error=null, 
+            message=null
+        ]
         */
 
         // Modify an endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint that has to be modified
+        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint that has to be modified
         parameters.put("alias","NewName"); // Values that have to be updated
 
         try {
             GenericResponse resp = api.editEndpoint(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=202
-        message=changed
-        error=null
-        apiId=d52aa190-b118-11e4-b932-22000ac50fac
+        GenericResponse [
+            serverCode=202, 
+            message=changed, 
+            error=null, 
+            apiId=1ca52b66-c71d-11e4-9107-22000afaaa90
+        ]
         */
 
         // Delete an Endpoint
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","20762201543927"); // ID of the endpoint that as to be deleted
+        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint that as to be deleted
 
         try {
             GenericResponse resp = api.deleteEndpoint(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=204
-        message=no response
-        error=null
-        apiId=unknown
+        GenericResponse [
+            serverCode=204, 
+            message=no response, 
+            error=null, 
+            apiId=unknown
+        ]
 
         Unsuccessful Output
-        serverCode=404
-        message=null
-        error=not found
-        apiId=198b7aa8-b119-11e4-b423-22000ac8a2f8
+        GenericResponse [
+            serverCode=404, 
+            message=null, 
+            error=not found, 
+            apiId=45d8f058-c71d-11e4-b932-22000ac50fac
+        ]
         */
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }    

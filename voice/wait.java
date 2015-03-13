@@ -112,3 +112,49 @@ Sample Output
         <Speak>Hello</Speak>
 </Response>
 */
+
+// beepDetection.java
+
+package plivoexample;
+
+import java.io.IOException;
+
+import com.plivo.helper.exception.PlivoException;
+import com.plivo.helper.xml.elements.PlivoResponse;
+import com.plivo.helper.xml.elements.Speak;
+import com.plivo.helper.xml.elements.Wait;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class beepDetection extends HttpServlet {
+    private static final long serialVersionUID = 1L;    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        
+        PlivoResponse response = new PlivoResponse();
+        Wait wait = new Wait();
+        wait.setLength(10);
+     
+        wait.setBeep(true);
+        Speak spk = new Speak("Hello");
+        
+        try {
+            response.append(wait);
+            response.append(spk);
+            System.out.println(response.toXML());
+            resp.addHeader("Content-Type", "text/xml");
+            resp.getWriter().print(response.toXML());;
+        } catch (PlivoException e) {
+            e.printStackTrace();
+        }       
+    }
+}
+
+/*
+Sample Output
+
+*/

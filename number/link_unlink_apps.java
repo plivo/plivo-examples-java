@@ -18,43 +18,27 @@ public class App {
         
         // Link an application to a phone number
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("number","1111111111");
-        parameters.put("app_id","16632742496743552");
+        parameters.put("number","12105030864");
+        parameters.put("app_id","27082215185108636");
 
         try {
             GenericResponse resp = api.linkApplicationNumber(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }  
         
         // Unlink an application from a phone number
         LinkedHashMap<String, String> param = new LinkedHashMap<String, String>();
-        param.put("number","1111111111");
+        param.put("number","12105030864");
         
         try {
             GenericResponse resp = api.unlinkApplicationNumber(param);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }
         
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }
 
@@ -62,13 +46,17 @@ public class App {
 /*
 Sample Output
 Link an application to a phone number
-serverCode=202
-message=changed
-error=null
-apiId=4b903fea-b6a3-11e4-9107-22000afaaa90
+GenericResponse [
+    serverCode=202, 
+    message=changed, 
+    error=null, 
+    apiId=4c08dfc8-c723-11e4-af95-22000ac54c79
+]
 
 Unlink an application from a phone number
-serverCode=202
-message=changed
-error=null
-apiId=c2772164-b6a3-11e4-b423-22000ac8a2f8
+GenericResponse [
+    serverCode=202, 
+    message=changed, 
+    error=null, 
+    apiId=eccbd56e-c723-11e4-ac1f-22000ac51de6
+]

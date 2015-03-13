@@ -18,17 +18,8 @@ public class SendAlphanumeric {
         // Get details off all the messages
         try {
             MessageFactory msg = api.getMessages();
-            // Print the API ID
-            System.out.println("Api ID : " + msg.apiId);
-            // Print the Meta response
-            System.out.println("Meta");
-            System.out.println(getFields(msg.meta));
-            // Print the objects
-            System.out.println("Objects");
-            int count = msg.messageList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(msg.messageList.get(i)));
-            }
+            // Print the complete response
+            System.out.println(msg);
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -42,125 +33,110 @@ public class SendAlphanumeric {
 
         try {
             MessageFactory msg = api.getMessages(parameters);
-            // Print the API ID
-            System.out.println("Api ID : " + msg.apiId);
-            // Print the Meta response
-            System.out.println("Meta");
-            System.out.println(getFields(msg.meta));
-            // Print the objects
-            System.out.println("Objects");
-            int count = msg.messageList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(msg.messageList.get(i)));
-            }
+            // Print the complete response
+            System.out.println(msg);
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }   
-    }
-
-    // Get all the fields in the Response
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }
 
 // Sample Output without filter
 /*
-Api ID : 20b76958-a87d-11e4-ac1f-22000ac51de6
-Meta
-previous=null
-totalCount=479
-offset=0
-limit=20
-next=/v1/Account/XXXXXXXXXXXXXXX/Message/?limit=20&offset=20
-
-Objects
-cloudRate=null
-carrierRate=null
-messageDirection=outbound
-toNumber=1111111111
-messageState=delivered
-totalAmount=0.03680
-fromNumber=2222222222
-messageUUID=9d787344-a87b-11e4-890b-22000aec819c
-messageTime=2015-01-30 16:29:20+04:00
-resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/9d787344-a87b-11e4-890b-22000aec819c/
-messageType=sms
-totalRate=0.03680
-units=1
-error=null
-apiId=null
-
-cloudRate=null
-carrierRate=null
-messageDirection=outbound
-toNumber=1111111111
-messageState=sent
-totalAmount=0.00700
-fromNumber=2222222222
-messageUUID=242de67c-a87b-11e4-890b-22000aec819c
-messageTime=2015-01-30 16:25:56+04:00
-resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/242de67c-a87b-11e4-890b-22000aec819c/
-messageType=sms
-totalRate=0.00350
-units=2
-error=null
-apiId=null
+MessageFactory [
+    serverCode=200, 
+    meta=MessageMeta [
+        previous=null, 
+        totalCount=524, 
+        offset=0, 
+        limit=20, next=/v1/Account/XXXXXXXXXXXXXXX/Message/?limit=20&offset=20
+    ], 
+    apiId=470cf77a-c714-11e4-af95-22000ac54c79, 
+    messageList=[
+        Message [
+            cloudRate=null, 
+            carrierRate=null,
+            messageDirection=outbound, 
+            toNumber=2222222222, 
+            messageState=delivered, 
+            totalAmount=0.00650, 
+            fromNumber=1111111111, 
+            messageUUID=7e02984e-c713-11e4-8672-22000aff09d1, 
+            messageTime=2015-03-10 16:22:06+05:30, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/7e02984e-c713-11e4-8672-22000aff09d1/, 
+            messageType=sms, 
+            totalRate=0.00650, 
+            units=1, 
+            error=null, 
+            apiId=null
+        ], Message [
+            cloudRate=null, 
+            carrierRate=null, 
+            messageDirection=outbound, 
+            toNumber=3333333333, 
+            messageState=delivered, 
+            totalAmount=0.00650, 
+            fromNumber=1111111111, 
+            messageUUID=7e026888-c713-11e4-a564-22000ac6807d, 
+            messageTime=2015-03-10 16:22:06+05:30, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/7e026888-c713-11e4-a564-22000ac6807d/, 
+            messageType=sms, 
+            totalRate=0.00650, 
+            units=1, 
+            error=null, 
+            apiId=null
+        ]
+    ], 
+    error=null
+]
 
 Sample Ouput with filter
 
-Api ID : ecfd64ce-a880-11e4-a2d1-22000ac5040c
-Meta
-previous=null
-totalCount=96
-offset=0
-limit=2
-next=/v1/Account/XXXXXXXXXXXXXXX/Message/?message_state=sent&limit=2&offset=2&message_direction=outbound
-
-Objects
-cloudRate=null
-carrierRate=null
-messageDirection=outbound
-toNumber=1111111111
-messageState=sent
-totalAmount=0.00700
-fromNumber=2222222222
-messageUUID=242de67c-a87b-11e4-890b-22000aec819c
-messageTime=2015-01-30 16:25:56+04:00
-resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/242de67c-a87b-11e4-890b-22000aec819c/
-messageType=sms
-totalRate=0.00350
-units=2
-error=null
-apiId=null
-
-cloudRate=null
-carrierRate=null
-messageDirection=outbound
-toNumber=2222222222
-messageState=sent
-totalAmount=0.00350
-fromNumber=1111111111
-messageUUID=6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c
-messageTime=2015-01-30 16:20:44+04:00
-resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/6a2aaa6c-a87a-11e4-a4ca-22000afd0b0c/
-messageType=sms
-totalRate=0.00350
-units=1
-error=null
-apiId=null
-
-
+MessageFactory [
+    serverCode=200, 
+    meta=MessageMeta [
+        previous=null, 
+        totalCount=101, 
+        offset=0, 
+        limit=2, 
+        next=/v1/Account/XXXXXXXXXXXXXXX/Message/?message_state=sent&limit=2&offset=2&message_direction=outbound
+    ], 
+    apiId=dae130ce-c714-11e4-af95-22000ac54c79, 
+    messageList=[
+        Message [
+            cloudRate=null, 
+            carrierRate=null, 
+            messageDirection=outbound, 
+            toNumber=2222222222, 
+            messageState=sent, 
+            totalAmount=0.00700, 
+            fromNumber=1111111111, 
+            messageUUID=25d0dd3c-bb53-11e4-8ced-22000ae3827c, 
+            messageTime=2015-02-23 17:27:31+05:30, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/25d0dd3c-bb53-11e4-8ced-22000ae3827c/, 
+            messageType=sms, 
+            totalRate=0.00350, 
+            units=2, 
+            error=null, 
+            apiId=null
+        ], Message [
+            cloudRate=null, 
+            carrierRate=null, 
+            messageDirection=outbound, 
+            toNumber=3333333333, 
+            messageState=sent, 
+            totalAmount=0.00700, 
+            fromNumber=1111111111, 
+            messageUUID=f22a2678-bb52-11e4-8ab5-22000af8012c, 
+            messageTime=2015-02-23 17:26:05+05:30, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/f22a2678-bb52-11e4-8ab5-22000af8012c/, 
+            messageType=sms, 
+            totalRate=0.00350, 
+            units=2, 
+            error=null, 
+            apiId=null
+        ]
+    ], 
+    error=null
+]
 */

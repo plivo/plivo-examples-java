@@ -27,113 +27,124 @@ public class App {
 
         try {
             PhoneNumberSearchFactory resp = api.searchPhoneNumber(parameters);
-            System.out.println("API ID : " + resp.apiId);
-            System.out.println("Meta :");
-            System.out.println(getFields(resp.meta));
-            System.out.println("Number List :");
-            int count = resp.numberList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(resp.numberList.get(i)));
-            }
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }  
         
         // Buy a phone number
         LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-        params.put("number","12109206499");
+        params.put("number","12105030864");
         
         try {
             NumberResponse resp = api.buyPhoneNumber(params);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
+        }catch (PlivoException e){  
+            System.out.println(e.getLocalizedMessage());
+        }
+
+        // Modify a number
+        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+        params.put("number","12105030864");
+        params.put("alias","test");
+        
+        try {
+            GenericResponse resp = api.editNumber(params);
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }
         
         // Unrent a phone number
         LinkedHashMap<String, String> param = new LinkedHashMap<String, String>();
-        param.put("number","12109206499");
+        param.put("number","12105030864");
         
         try {
             GenericResponse resp = api.unRentNumber(param);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }
         
     }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-      }
 }
 
 /*
 Sample Output
-API ID : 3c0d2ec8-b6a0-11e4-af95-22000ac54c79
-Meta :
-previous=null
-totalCount=98
-offset=0
-limit=20
-next=/v1/Account/XXXXXXXXXXXX/PhoneNumber/?limit=20&country_iso=US&pattern=210&region=Texas&offset=20&type=local
-
-Number List :
-country=UNITED STATES
-lata=566
-monthlyRentalRrate=0.80000
-number=12109206500
-type=fixed
-numberPrefix=210
-rateCenter=SANANTONIO
-region=Texas, UNITED STATES
-resourceURI=/v1/Account/XXXXXXXXXXXX/PhoneNumber/12109206500/
-restriction=null
-restriction_text=null
-setupRate=0.00000
-isVoiceEnabled=true
-isSmsEnabled=true
-voiceRate=0.00850
-smsRate=0.00000
-
-country=UNITED STATES
-lata=566
-monthlyRentalRrate=0.80000
-number=12109206501
-type=fixed
-numberPrefix=210
-rateCenter=SANANTONIO
-region=Texas, UNITED STATES
-resourceURI=/v1/Account/XXXXXXXXXXXX/PhoneNumber/12109206501/
-restriction=null
-restriction_text=null
-setupRate=0.00000
-isVoiceEnabled=true
-isSmsEnabled=true
-voiceRate=0.00850
-smsRate=0.00000
+PhoneNumberSearchFactory [
+    meta=NumberMeta [
+        previous=null, 
+        totalCount=100, 
+        offset=0, limit=20, 
+        next=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/?limit=20&country_iso=US&pattern=210&region=Texas&offset=20&type=local
+    ], 
+    apiId=3779cd70-c722-11e4-9107-22000afaaa90, 
+    error=null, 
+    numberList=[
+        PhoneNumber [
+            country=UNITED STATES,  
+            lata=566, 
+            monthlyRentalRrate=0.80000, 
+            number=12105030741, 
+            type=fixed, 
+            numberPrefix=210, 
+            rateCenter=SANANTONIO, 
+            region=Texas, UNITED STATES, 
+            resourceURI=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/12105030741/, 
+            restriction=null, 
+            restriction_text=null, 
+            setupRate=0.00000, 
+            isVoiceEnabled=true, 
+            isSmsEnabled=true, 
+            voiceRate=0.00850, 
+            smsRate=0.00000
+        ], PhoneNumber [
+            country=UNITED STATES, 
+            lata=566, 
+            monthlyRentalRrate=0.80000, 
+            number=12105030864, 
+            type=fixed, 
+            numberPrefix=210, 
+            rateCenter=SANANTONIO, 
+            region=Texas, UNITED STATES, 
+            resourceURI=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/12105030864/, 
+            restriction=null, 
+            restriction_text=null, 
+            setupRate=0.00000, 
+            isVoiceEnabled=true, 
+            isSmsEnabled=true, 
+            voiceRate=0.00850, 
+            smsRate=0.00000
+        ]
+    ]
+]
 
 Rent a number
-API ID : bce9914e-b6a0-11e4-b932-22000ac50fac
-Status : fulfilled
-number=12109206499
-status=Success
+NumberResponse [
+    numberStatusList=[
+        NumberStatus [
+            number=12105030864, 
+            status=Success
+        ]
+    ], 
+    status=fulfilled, 
+    error=null, 
+    apiId=fc8554e0-c722-11e4-b932-22000ac50fac
+]
+
+Modify a number
+GenericResponse [
+    serverCode=202, 
+    message=changed, 
+    error=null, 
+    apiId=b52fc844-c724-11e4-ac1f-22000ac51de6
+]
 
 Unrent a phone number
-serverCode=204
-message=no response
-error=null
-apiId=unknown
+GenericResponse [   
+    serverCode=204, 
+    message=no response, 
+    error=null, 
+    apiId=unknown
+]
 */

@@ -24,95 +24,114 @@ public class App {
         
         try{
             NumberSearchFactory resp = api.getNumbers(parameters);
-            System.out.println("API ID : " + resp.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(resp.meta));
-            System.out.println("Objects : ");
-            int count = resp.numberList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(resp.numberList.get(i)));
-            } ;
+            System.out.println(resp);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());            
         }
         
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
+        // Get details of a number
+        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
+        parameters.put("number","12105030864"); // Phone number for which the details have to be retrieved 
+        
+        try{
+            Number resp = api.getNumber(parameters);
+            System.out.println(resp);
+        }catch (PlivoException e){  
+            System.out.println(e.getLocalizedMessage());            
         }
-        return buffer.toString();
     }
 }
 
 /*
 Sample Output
+NumberSearchFactory [
+    serverCode=200, 
+    meta=NumberMeta [
+        previous=null, 
+        totalCount=3, 
+        offset=0, 
+        limit=10, 
+        next=null
+    ], 
+    apiId=c5ecb7fa-c71f-11e4-b932-22000ac50fac, 
+    error=null, 
+    numberList=[
+        Number [
+            serverCode=null, 
+            region=California, UNITED STATES, 
+            isVoiceEnabled=true, 
+            isSmsEnabled=true, 
+            isFaxEnabled=null, 
+            number=18583650866, 
+            apiId=null, 
+            voiceRate=0.00850, 
+            application=/v1/Account/XXXXXXXXXXXXXXXXX/Application/16634980296193768/,
+            smsRate=0.00000, 
+            numberType=local, 
+            subAccount=null, 
+            addedOn=2014-10-28, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Number/18582650866/, 
+            numberPrefix=null, 
+            rentalRate=null, 
+            setupRate=null, 
+            country=null, 
+            lata=null, 
+            monthlyRentalRrate=0.80000, 
+            error=null, 
+            inboundCarrier=Plivo
+        ], Number [
+            serverCode=null, 
+            region=UNITED KINGDOM, 
+            isVoiceEnabled=true, 
+            isSmsEnabled=true, 
+            isFaxEnabled=null, 
+            number=447441906862, 
+            apiId=null, 
+            voiceRate=0.00500, 
+            application=null, 
+            smsRate=0.00000, 
+            numberType=local, 
+            subAccount=null, 
+            addedOn=2015-02-17, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Number/447440906862/, 
+            numberPrefix=null, 
+            rentalRate=null, 
+            setupRate=null, 
+            country=null, 
+            lata=null, 
+            monthlyRentalRrate=0.80000, 
+            error=null, 
+            inboundCarrier=Plivo
+        ]
+    ]
+]
 
-Get all numbers
-API ID : 81e15f52-b68f-11e4-b423-22000ac8a2f8
-Meta : 
-previous=null
-totalCount=2
-offset=0
-limit=10
-next=null
+Get details of a number
 
-Objects : 
-serverCode=null
-region=UNITED KINGDOM
-isVoiceEnabled=true
-isSmsEnabled=true
-isFaxEnabled=null
-number=1111111111
-apiId=null
-voiceRate=0.00500
-application=null
-smsRate=0.00000
-numberType=local
-subAccount=null
-addedOn=2014-12-04
-resourceUri=/v1/Account/XXXXXXXXXXXX/Number/1111111111/
-numberPrefix=null
-rentalRate=null
-setupRate=null
-country=null
-lata=null
-monthlyRentalRrate=0.80000
-error=null
-inboundCarrier=Plivo
-
-serverCode=null
-region=California, UNITED STATES
-isVoiceEnabled=true
-isSmsEnabled=true
-isFaxEnabled=null
-number=2222222222
-apiId=null
-voiceRate=0.00850
-application=/v1/Account/XXXXXXXXXXXX/Application/26469261154421101/
-smsRate=0.00000
-numberType=local
-subAccount=null
-addedOn=2014-10-28
-resourceUri=/v1/Account/XXXXXXXXXXXX/Number/2222222222/
-numberPrefix=null
-rentalRate=null
-setupRate=null
-country=null
-lata=null
-monthlyRentalRrate=0.80000
-error=null
-inboundCarrier=Plivo
+Number [
+    serverCode=200, 
+    region=Texas, UNITED STATES, 
+    isVoiceEnabled=true, 
+    isSmsEnabled=true, 
+    isFaxEnabled=null, 
+    number=12105030864, 
+    apiId=5b3830ce-c724-11e4-af95-22000ac54c79, 
+    voiceRate=0.00850, 
+    application=null, 
+    smsRate=0.00000, 
+    numberType=local, 
+    subAccount=null, 
+    addedOn=2015-03-10, 
+    resourceUri=/v1/Account/MAYMFHYZJKMJG0NJG4OG/Number/12105030864/, 
+    numberPrefix=null, 
+    rentalRate=null, 
+    setupRate=null, 
+    country=null, 
+    lata=null, 
+    monthlyRentalRrate=0.80000, 
+    error=null, 
+    inboundCarrier=Plivo
+]
 
 
 

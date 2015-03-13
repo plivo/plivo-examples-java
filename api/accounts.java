@@ -21,27 +21,29 @@ public class App {
         // Get Details of account
         try {
             Account resp = api.getAccount();
-            System.out.print(getFields(resp));
+            System.out.print(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        city=Sample City
-        name=Sample
-        cashCredits=78.02225
-        created=null
-        enabled=null
-        modified=null
-        error=null
-        apiId=d2576d1e-b108-11e4-96e3-22000abcb9af
-        postpaid=null
-        state=
-        address=Testig address
-        timezone=Asia/Kolkata
-        authID=XXXXXXXXXXXXXXXXX
-        resourceURI=/v1/Account/XXXXXXXXXXXXXXXXX/
+        Account [
+            city=Sample City
+            name=Sample
+            cashCredits=78.02225
+            created=null
+            enabled=null
+            modified=null
+            error=null
+            apiId=d2576d1e-b108-11e4-96e3-22000abcb9af
+            postpaid=null
+            state=
+            address=Testig address
+            timezone=Asia/Kolkata
+            authID=XXXXXXXXXXXXXXXXX
+            resourceURI=/v1/Account/XXXXXXXXXXXXXXXXX/
+        ]
         */
 
         // Modify account
@@ -53,17 +55,19 @@ public class App {
 
         try {
             GenericResponse resp = api.editAccount(parameters);
-            System.out.print(getFields(resp));
+            System.out.print(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=202
-        message=changed
-        error=null
-        apiId=3b6fb968-b10a-11e4-ac1f-22000ac51de6
+        GenericResponse [
+            serverCode=202
+            message=changed
+            error=null
+            apiId=3b6fb968-b10a-11e4-ac1f-22000ac51de6
+        ]   
         */
 
         // Create a sub account
@@ -72,25 +76,28 @@ public class App {
         parameters.put("enabled","Test City"); // Specify if the subaccount should be enabled or not
 
         try {
-            GenericResponse resp = api.createSubaccount(parameters);
-            System.out.print(getFields(resp));
+            SubAccount resp = api.createSubaccount(parameters);
+            System.out.print(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        account=null
-        error=null
-        apiId=93f8affa-b10e-11e4-96e3-22000abcb9af
-        authId=SAYWJLYWI1MZU1MWY4YT
-        authToken=YzRiZTBmZjRlMjkxZGNhZWM2M2YyNWRlOTQ4YmZh
-        newAuthToken=null
-        resourceUri=null
-        createdOn=null
-        isEnabled=null
-        lastModifiedOn=null
-        name=null
+        SubAccount [
+            account=null, 
+            error=null, 
+            apiId=46be5f96-c725-11e4-af95-22000ac54c79, 
+            authId=SANJEYZGU1NWQ4YMQ1Y2, 
+            authToken=ZmYxY2YxZmZjNzQxYTVjYTQzODUwY2QwZDhlY2I0, 
+            newAuthToken=null, 
+            resourceUri=null, 
+            createdOn=null, 
+            isEnabled=null, 
+            lastModifiedOn=null, 
+            name=null, 
+            message=created
+        ]
         */
 
         // Modify a sub account
@@ -100,150 +107,131 @@ public class App {
 
         try {
             GenericResponse resp = api.editSubaccount(parameters);
-            System.out.print(getFields(resp));
+            System.out.print(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        serverCode=201
-        message=created
-        error=null
-        apiId=67b072d2-b110-11e4-b932-22000ac50fac
+        GenericResponse [
+            serverCode=201, 
+            message=created, 
+            error=null, 
+            apiId=8e2f7e1e-c725-11e4-8ccf-22000afb14f7
+        ]
         */
 
         // Get details of all sub accounts
         try {
             SubAccountFactory resp = api.getSubaccounts();
-            System.out.println("Api ID : " + resp.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(resp.meta));
-            System.out.println("Objects");
-            int count = resp.subAccountList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(resp.subAccountList.get(i)));
-            }     
+            System.out.println(resp);  
             //  Print the total number of apps
-            System.out.println("Total count : " + resp.meta.total_count);
+            System.out.println("Total count : " + resp.meta.totalCount);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
 
         /*
         Sample Output
-        Api ID : 0a2fd6c8-b112-11e4-96e3-22000abcb9af
-        Meta : 
-        previous=null
-        totalCount=3
-        offset=0
-        limit=20
-        next=null
-
-        Objects
-        account=/v1/Account/XXXXXXXXXXXXXXXXX/
-        error=null
-        apiId=null
-        authId=SAYWJLYWI1MZU1MWY4YT
-        authToken=YzRiZTBmZjRlMjkxZGNhZWM2M2YyNWRlOTQ4YmZh
-        newAuthToken=YzRiZTBmZjRlMjkxZGNhZWM2M2YyNWRlOTQ4YmZh
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAYWJLYWI1MZU1MWY4YT/
-        createdOn=2015-02-10
-        isEnabled=true
-        lastModifiedOn=null
-        name=Testing2
-
-        account=/v1/Account/XXXXXXXXXXXXXXXXX/
-        error=null
-        apiId=null
-        authId=SAYJY1YTU3YJDMNJLIOT
-        authToken=YWY0NDk0ZTIxZjAxYjNhMGYyMjg2NDA1ODIyOGYx
-        newAuthToken=YWY0NDk0ZTIxZjAxYjNhMGYyMjg2NDA1ODIyOGYx
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAYJY1YTU3YJDMNJLIOT/
-        createdOn=2015-02-10
-        isEnabled=true
-        lastModifiedOn=null
-        name=Testing
-
-        account=/v1/Account/XXXXXXXXXXXXXXXXX/
-        error=null
-        apiId=null
-        authId=SAMWJKYJFHZTM2YWE4OW
-        authToken=MjI4YzBiMDQ4MWFjODkyYWNkMDY3NDViMDZjZGUz
-        newAuthToken=MjI4YzBiMDQ4MWFjODkyYWNkMDY3NDViMDZjZGUz
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAMWJKYJFHZTM2YWE4OW/
-        createdOn=2014-12-04
-        isEnabled=true
-        lastModifiedOn=null
-        name=Ramya
-
-        Total count : 3
+        SubAccountFactory [
+            serverCode=200, 
+            meta=SubAccountMeta [
+                previous=null, 
+                totalCount=2, 
+                offset=0, 
+                limit=20, 
+                next=null
+            ], 
+            error=null, 
+            apiId=e19cb51c-c725-11e4-9107-22000afaaa90, 
+            subAccountList=[
+                SubAccount [
+                    account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
+                    error=null, apiId=null, 
+                    authId=SAM2IYMJUWODK2ZGMWOW, 
+                    authToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
+                    newAuthToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
+                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAM2IYMJUWODK2ZGMWOW/, 
+                    createdOn=2015-03-10, 
+                    isEnabled=false, 
+                    lastModifiedOn=null, 
+                    name=Testing001, 
+                    message=null
+                ], SubAccount [
+                    account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
+                    error=null, 
+                    apiId=null, 
+                    authId=SANTNKM2M4ZMFJOGVKYZ, 
+                    authToken=YTYxMjY0YTlhNDMzMjMwYmVkZmQ4ZDk1ODdlZTI1, 
+                    newAuthToken=YTYxMjY0YTlhNDMzMjMwYmVkZmQ4ZDk1ODdlZTI1, 
+                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SANTNKM2M4ZMFJOGVKYZ/, 
+                    createdOn=2015-03-10, 
+                    isEnabled=true, 
+                    lastModifiedOn=null, 
+                    name=Testing, 
+                    message=null
+                ]
+            ]
+        ]
+        Total count : 2
         */
 
         // Get details of a particular sub acount
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("subauth_id","SAYJY1YTU3YJDMNJLIOT");
+        parameters.put("subauth_id","SANJEYZGU1NWQ4YMQ1Y2");
  
         try {
             SubAccount resp = api.getSubaccount(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
         /*
         Sample Output
-        account=/v1/Account/XXXXXXXXXXXXXXXXX/
-        error=null
-        apiId=8c65f654-b112-11e4-b153-22000abcaa64
-        authId=SAYJY1YTU3YJDMNJLIOT
-        authToken=YWY0NDk0ZTIxZjAxYjNhMGYyMjg2NDA1ODIyOGYx
-        newAuthToken=YWY0NDk0ZTIxZjAxYjNhMGYyMjg2NDA1ODIyOGYx
-        resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAYJY1YTU3YJDMNJLIOT/
-        createdOn=2015-02-10
-        isEnabled=true
-        lastModifiedOn=null
-        name=Testing
+        SubAccount [
+            account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
+            error=null, 
+            apiId=580f06b4-c726-11e4-8ccf-22000afb14f7, 
+            authId=SANJEYZGU1NWQ4YMQ1Y2, 
+            authToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
+            newAuthToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
+            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SANJEYZGU1NWQ4YMQ1Y2/, 
+            createdOn=2015-03-10, 
+            isEnabled=false, 
+            lastModifiedOn=null, 
+            name=Testing001,
+            message=null
+        ]
         */
 
         // Delete a sub account
         LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("subauth_id","SAYJY1YTU3YJDMNJLIOT");
+        parameters.put("subauth_id","SANJEYZGU1NWQ4YMQ1Y2");
 
         try {
             GenericResponse resp = api.deleteSubaccount(parameters);
-            System.out.println(getFields(resp));
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
         
         /*
         Sample Output
-        serverCode=204
-        message=no response
-        error=null
-        apiId=unknown
+        GenericResponse [
+            serverCode=204, 
+            message=no response, 
+            error=null, 
+            apiId=unknown
+        ]
 
         Unsuccessful Output
-        serverCode=404
-        message=null
-        error=not found
-        apiId=198b7aa8-b119-11e4-b423-22000ac8a2f8
+        GenericResponse [
+            serverCode=404, 
+            message=null, 
+            error=not found, 
+            apiId=a293684c-c726-11e4-b423-22000ac8a2f8
+        ]
         */
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }

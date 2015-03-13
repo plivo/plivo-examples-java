@@ -21,15 +21,7 @@ public class App {
             
         try {
             CDRFactory cdr = api.getCDRs(parameters);
-
-            System.out.println("API ID : " + cdr.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(cdr.meta));
-            System.out.println("Objects : ");
-             int count = cdr.cdrList.size();
-             for (int i = 0 ; i < count; i++){
-                 System.out.println(getFields(cdr.cdrList.get(i)));
-             }
+            System.out.println(cdr);
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -48,36 +40,12 @@ public class App {
         try {
             // Send the message
             CDRFactory cdrs = apis.getCDRs(params);
-
-            System.out.println("API ID : " + cdrs.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(cdrs.meta));
-            System.out.println("Objects : ");
-             int count = cdrs.cdrList.size();
-             for (int i = 0 ; i < count; i++){
-                 System.out.println(getFields(cdrs.cdrList.get(i)));
-             }
+            System.out.println(cdrs);
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
 
     } 
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-   }
 }
 
 /*

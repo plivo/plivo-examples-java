@@ -25,7 +25,7 @@ public class BulkMessage {
             // Send the messages
             MessageResponse msgResponse = api.sendMessage(parameters);
             // Print the response
-            System.out.print(getFields(msgResponse));
+            System.out.println(msgResponse);
             // Loop through the Message UUID
             if (msgResponse.serverCode == 202) {
                 int count = msgResponse.messageUuids.size();
@@ -51,47 +51,34 @@ public class BulkMessage {
             // Send the messages
             MessageResponse msgResponse = api.sendMessage(parameters);
             // Print the response
-            System.out.print(getFields(msgResponse));
+            System.out.println(msgResponse);
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
 
     }
-
-    // Get all the fields in the Response
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-    }
 }
 
 // Sample output
 /*
-serverCode=202
-message=message(s) queued
-messageUuids=[f510e58e-a879-11e4-a4ca-22000afd0b0c, f5108382-a879-11e4-b328-22000afd044b]
-error=null
-apiId=f4f263fc-a879-11e4-b423-22000ac8a2f8
-Message UUID : f510e58e-a879-11e4-a4ca-22000afd0b0c
-Message UUID : f5108382-a879-11e4-b328-22000afd044b
+MessageResponse [
+    serverCode=202, 
+    message=message(s) queued, 
+    messageUuids=[7e026888-c713-11e4-a564-22000ac6807d, 7e02984e-c713-11e4-8672-22000aff09d1], 
+    error=null, 
+    apiId=7de80790-c713-11e4-b423-22000ac8a2f8
+]
+Message UUID : 7e026888-c713-11e4-a564-22000ac6807d
+Message UUID : 7e02984e-c713-11e4-8672-22000aff09d1
 
 Sample Output for invalid number
 
-serverCode=400
-message=null
-messageUuids=null
-error=11111 is not a valid phone number
-apiId=e0421a42-a879-11e4-ac1f-22000ac51de6
-11111 is not a valid phone number
+MessageResponse [
+    serverCode=400, 
+    message=null, 
+    messageUuids=null, 
+    error=1111 is not a valid phone number, 
+    apiId=a7265314-c713-11e4-b423-22000ac8a2f8
+]
+1111 is not a valid phone number
 */

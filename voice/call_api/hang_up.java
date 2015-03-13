@@ -21,26 +21,10 @@ public class App {
 
         try {
             GenericResponse resp = api.hangupCall(parameters);
-            System.out.println(getFields(resp));            
+            System.out.println(resp);   
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }  
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }
 

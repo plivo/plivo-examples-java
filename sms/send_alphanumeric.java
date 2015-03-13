@@ -26,7 +26,7 @@ public class SendAlphanumeric {
             MessageResponse msgResponse = api.sendMessage(parameters);
 
             // Print the response
-            System.out.print(getFields(msgResponse));
+            System.out.println(msgResponse);
             // Print the Api ID
             System.out.println("Api ID : " + msgResponse.apiId);
             // Print the Response Message
@@ -41,33 +41,18 @@ public class SendAlphanumeric {
             System.out.println(e.getLocalizedMessage());
         }
     }
-
-    // Get all the fields in the Response
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-    }
 }
 
 // Sample Output
 /*
-serverCode=202
-message=message(s) queued
-messageUuids=[9d787344-a87b-11e4-890b-22000aec819c]
-error=null
-apiId=9d633d26-a87b-11e4-ac1f-22000ac51de6
-Api ID : 9d633d26-a87b-11e4-ac1f-22000ac51de6
+MessageResponse [
+    serverCode=202, 
+    message=message(s) queued, 
+    messageUuids=[83ea7c5c-c715-11e4-a500-22000acb83ad], 
+    error=null, 
+    apiId=83d1cbda-c715-11e4-b423-22000ac8a2f8
+]
+Api ID : 83d1cbda-c715-11e4-b423-22000ac8a2f8
 Message : message(s) queued
-Message UUID : 9d787344-a87b-11e4-890b-22000aec819c
+Message UUID : 83ea7c5c-c715-11e4-a500-22000acb83ad
 */

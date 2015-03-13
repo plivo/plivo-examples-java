@@ -41,7 +41,7 @@ public class LongMessage {
             MessageResponse msgResponse = api.sendMessage(parameters);
 
             // Print the response
-            System.out.print(getFields(msgResponse));
+            System.out.println(msgResponse);
             // Send the Api ID
             System.out.println("Api ID : " + msgResponse.apiId);
             // Send the Response Message
@@ -68,36 +68,21 @@ public class LongMessage {
             System.out.println(e.getLocalizedMessage());
         }
     }
-
-    // Get all the fields in the Response
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-    }
 }
 
 // Sample Output
 /*
-serverCode=202
-message=message(s) queued
-messageUuids=[242de67c-a87b-11e4-890b-22000aec819c]
-error=null
-apiId=241029e8-a87b-11e4-96e3-22000abcb9af
-
-Api ID : 241029e8-a87b-11e4-96e3-22000abcb9af
+MessageResponse [
+    serverCode=202, 
+    message=message(s) queued, 
+    messageUuids=[dfa86ad6-c715-11e4-8672-22000aff09d1], 
+    error=null, 
+    apiId=df8ede22-c715-11e4-b932-22000ac50fac
+]
+Api ID : df8ede22-c715-11e4-b932-22000ac50fac
 Message : message(s) queued
-Message UUID : 242de67c-a87b-11e4-890b-22000aec819c
+Message UUID : dfa86ad6-c715-11e4-8672-22000aff09d1
+
 // Output for English
 Units : 2
 

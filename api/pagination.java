@@ -24,14 +24,7 @@ public class App {
 
         try {
             EndpointFactory resp = api.getEndpoints(parameters);
-            System.out.println("API ID : " + resp.apiId);
-            System.out.println("Meta : ");
-            System.out.println(getFields(resp.meta));
-            System.out.println("Objects : ");
-            int count = resp.endpointList.size();
-            for (int i = 0 ; i < count; i++){
-                System.out.println(getFields(resp.endpointList.get(i)));
-            }
+            System.out.println(resp);
         }catch (PlivoException e){
             System.out.println(e.getLocalizedMessage());
         }
@@ -70,21 +63,5 @@ public class App {
         Browse https://api.plivo.com/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
         to view the next page of results. To traverse pages, browse the 'next' and 'previous' urls
         */
-    }
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
     }
 }

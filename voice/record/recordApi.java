@@ -30,7 +30,7 @@ public class App {
 
         try {
            Record resp1 = api1.record(parameters1);
-           System.out.println(getFields(resp1));
+           System.out.println(resp1);
         }catch (PlivoException e){  
            System.out.println(e.getLocalizedMessage());
         }
@@ -43,7 +43,7 @@ public class App {
         
         try{
             GenericResponse resp2 = api2.stopRecord(parameters2);
-            System.out.println(getFields(resp2));
+            System.out.println(resp2);
          }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
          }
@@ -58,7 +58,7 @@ public class App {
         
         try{
             Record resp3 = api3.record(parameters3);
-            System.out.println(getFields(resp3));
+            System.out.println(resp3);
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }
@@ -71,25 +71,9 @@ public class App {
         
         try{
             GenericResponse resp4 = api4.stopRecord(parameters4);
-            System.out.println(getFields(resp4));
+            System.out.println(resp4);
          }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
          }
     } 
-
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-   }
 }
