@@ -23,8 +23,8 @@ public class App {
         parameters.put("app_name","Testing_App"); // The name of your application
 
         try {
-            GenericResponse resp = api.createApplication(parameters);
-            System.out.println(getFields(resp));
+            Application resp = api.createApplication(parameters);
+            System.out.println((resp));
         }catch (PlivoException e){  
             System.out.println(e.getLocalizedMessage());
         }
