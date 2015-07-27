@@ -30,6 +30,7 @@ public class SendAlphanumeric {
         parameters.put("offset", "0"); // The number of value items by which the results should be offset
         parameters.put("message_state", "sent"); // The state of the message to be filtered
         parameters.put("message_direction", "outbound"); // The direction of te message to be fltered
+        parameters.put("subaccount", "SubAccount_AUTH_ID"); // The id of the subaccount, if SMS details of the subaccount is needed.
 
         try {
             MessageFactory msg = api.getMessages(parameters);
