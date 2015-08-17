@@ -31,6 +31,7 @@ public class SendAlphanumeric {
         parameters.put("message_state", "sent"); // The state of the message to be filtered
         parameters.put("message_direction", "outbound"); // The direction of te message to be fltered
         parameters.put("subaccount", "SubAccount_AUTH_ID"); // The id of the subaccount, if SMS details of the subaccount is needed.
+        parameters.put("message_time__gte","2015-07-26%2011%3A47" ); // Filter out messages according to the time of completion.
 
         try {
             MessageFactory msg = api.getMessages(parameters);
