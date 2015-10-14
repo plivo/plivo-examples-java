@@ -36,7 +36,7 @@ public class App {
         params.put("to_number", "2222222222");
         params.put("limit", "2");
         params.put("offset", "0");
-        parameters.put("end_time__gte","2015-07-26%2011%3A47" ); // Filter out calls according to the time of completion.
+        parameters.put("end_time__gte","2015-07-26 11:47" ); // Filter out calls according to the time of completion.
             
         try {
             // Send the message
