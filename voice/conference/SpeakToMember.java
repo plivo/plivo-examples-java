@@ -1,49 +1,33 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
+import com.plivo.api.models.conference.ConferenceMemberActionResponse;
 
-import java.util.LinkedHashMap;
+class SpeakCreate {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            ConferenceMemberActionResponse response = Conference.memberSpeaker(
+						"Sample_Room", // Conference room name
+						"56842", // Member_id of the conference
+						"Hello! Member. Welcome to the conference Sample_Room" // Text message to be played to the member
+						)
+                    .speak();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class SpeakToMember {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		
-		params.put("conference_name", "1234");
-		params.put("member_id", "1");			/* single member_id or multiple or 'all' */
-		params.put("text", "Hello! Member. Welcome to the conference 1234");
-		
-		/**
-		 * Optional Parameters
-		 * 
-		 * voice : MAN, WOMAN, Defaults to WOMAN
-		 * language : en-US,el-GR etc.
-		 * 
-		 * params.put("voice", "MAN");
-		 * params.put("language", "en-US");
-		 */
-		
-		GenericResponse response = new GenericResponse();
-		
-		try
-		{
-			response = restAPI.speakMember(params);
-			System.out.println(response.apiId);
-		} 
-		catch (PlivoException plivoException) {
-
-			plivoException.printStackTrace();
-		}
-		
-	}
-
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+/*
+Sample Output
+{
+  "api_id": "358230c0-35e4-11eb-a568-0242ac110008",
+  "member_id": [
+    "56842"
+  ],
+  "message": "speak queued into conference"
+}
+*/

@@ -1,185 +1,189 @@
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.endpoint.Endpoint;
-import com.plivo.helper.api.response.endpoint.EndpointFactory;
-import com.plivo.helper.api.response.response.GenericResponse;
-import com.plivo.helper.exception.PlivoException;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.base.ListResponse;
+import com.plivo.api.models.endpoint.Endpoint;
+import com.plivo.api.models.endpoint.EndpointCreateResponse;
+import com.plivo.api.models.endpoint.EndpointUpdateResponse;
 
 public class App {
 
-    public static void main(String[] args) throws IllegalAccessException {
+  public static void main(String[] args) {
 
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-        
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("username","testEndpoint"); // The username for the endpoint to be created
-        parameters.put("password","test123"); // The password for your endpoint username
-        parameters.put("alias","testEndpoint"); // Alias for this endpoint
-        
-        // Create an Endpoint
-        try {
-            Endpoint resp = api.createEndpoint(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+    String auth_id = "YOUR_AUTH_ID";
+    String auth_token = "YOUR_AUTH_TOKEN";
 
-        /*
+    Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+
+    try {
+      EndpointCreateResponse response = Endpoint.creator("testusername", // Endpoint user_name
+      "testpassword", // Endpoint password
+      "Test Account" // Endpoint alias_name
+      ).create();
+
+      System.out.println(response);
+    } catch(PlivoRestException | IOException e) {
+      e.printStackTrace();
+    }
+
+    /*
         Sample Output
-        Endpoint [
-            serverCode=201, 
-            username=testEndpoint150310115033, 
-            sipUri=null, 
-            alias=testEndpoint, 
-            endpointId=22386716736727, 
-            password=null, 
-            resourceUri=null, 
-            apiId=a8650632-c71b-11e4-b932-22000ac50fac, 
-            error=null, 
-            message=created
-        ]
+        {
+            "alias": "Test Account",
+            "api_id": "63aea1ec-339d-11eb-b9f0-0242ac110004",
+            "endpoint_id": "905295392261175",
+            "message": "created",
+            "username": "testusername18231820540650120985555"
+        }
         */
 
-        // Get details of all existing endpoints
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("limit","2"); // The number of results per page
-        parameters.put("offset","0"); // The number of value items by which the results should be offset
+    // Get details of all existing endpoints
+    try {
+      ListResponse < Endpoint > response = Endpoint.lister().offset(0).limit(5).list();
 
-        try {
-            EndpointFactory resp = api.getEndpoints(parameters);
-            System.out.println(resp);
-            // Print the total number of endpoints
-            System.out.println("Total count : " + resp.meta.total_count);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+      System.out.println(response);
+    } catch(PlivoRestException | IOException e) {
+      e.printStackTrace();
+    }
 
-        /*
+    /*
         Sample Output
-        EndpointFactory [
-            serverCode=200, 
-            meta=EndpointMeta [
-                previous=null, 
-                totalCount=4, 
-                offset=0, 
-                limit=2, 
-                next=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
-            ], 
-            error=null, 
-            apiId=0dceba7c-c71c-11e4-ac1f-22000ac51de6, 
-            endpointList=[
-                Endpoint [
-                    serverCode=null, 
-                    username=testEndpoint150310115033, 
-                    sipUri=sip:testEndpoint150310115033@phone.plivo.com, 
-                    alias=testEndpoint, 
-                    endpointId=22386716736727, 
-                    password=cc03e747a6afbbcbf8be7668acfebee5, 
-                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/22386716736727/, 
-                    apiId=null, 
-                    error=null, 
-                    message=null
-                ], 
-                Endpoint [
-                    serverCode=null, 
-                    username=testEndpoint123150310113848, 
-                    sipUri=sip:testEndpoint123150310113848@phone.plivo.com, 
-                    alias=testEndpoint123, 
-                    endpointId=59627429467949, 
-                    password=cc03e747a6afbbcbf8be7668acfebee5, 
-                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/59627429467949/, 
-                    apiId=null, 
-                    error=null, 
-                    message=null
+        {
+            "api_id": "7723a116-3399-11eb-afb0-0242ac110005",
+            "meta": {
+                "limit": 5,
+                "next": null,
+                "offset": 0,
+                "previous": null,
+                "total_count": 5
+            },
+            "objects": [
+                {
+                    "alias": "App1",
+                    "application": "/v1/Account/MAXXXXXXXXXXXXXXXX/Application/11111111111111111/",
+                    "endpoint_id": "122222222222",
+                    "password": "XXXXXXXXXXXXXXXXXXX",
+                    "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Endpoint/122222222222/",
+                    "sip_registered": "false",
+                    "sip_uri": "sip:name_of_endpoint@phone.plivo.com",
+                    "sub_account": null,
+                    "username": "name_of_endpoint"
+                },
+                {
+                    "alias": "App2",
+                    "application": "/v1/Account/MAXXXXXXXXXXXXXXXX/Application/11111111111111111/",
+                    "endpoint_id": "122222222222",
+                    "password": "XXXXXXXXXXXXXXXXXXX",
+                    "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Endpoint/122222222222/",
+                    "sip_registered": "false",
+                    "sip_uri": "sip:name_of_endpoint@phone.plivo.com",
+                    "sub_account": null,
+                    "username": "name_of_endpoint"
+                },
+                {
+                    "alias": "App3",
+                    "application": "/v1/Account/MAXXXXXXXXXXXXXXXX/Application/11111111111111111/",
+                    "endpoint_id": "122222222222",
+                    "password": "XXXXXXXXXXXXXXXXXXX",
+                    "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Endpoint/122222222222/",
+                    "sip_registered": "false",
+                    "sip_uri": "sip:name_of_endpoint@phone.plivo.com",
+                    "sub_account": null,
+                    "username": "name_of_endpoint"
+                },
+                {
+                    "alias": "App4",
+                    "application": "/v1/Account/MAXXXXXXXXXXXXXXXX/Application/11111111111111111/",
+                    "endpoint_id": "122222222222",
+                    "password": "XXXXXXXXXXXXXXXXXXX",
+                    "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Endpoint/122222222222/",
+                    "sip_registered": "false",
+                    "sip_uri": "sip:name_of_endpoint@phone.plivo.com",
+                    "sub_account": null,
+                    "username": "name_of_endpoint"
+                },
+                {
+                    "alias": "App5",
+                    "application": "/v1/Account/MAXXXXXXXXXXXXXXXX/Application/11111111111111111/",
+                    "endpoint_id": "122222222222",
+                    "password": "XXXXXXXXXXXXXXXXXXX",
+                    "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Endpoint/122222222222/",
+                    "sip_registered": "false",
+                    "sip_uri": "sip:name_of_endpoint@phone.plivo.com",
+                    "sub_account": null,
+                    "username": "name_of_endpoint"
+                },
                 ]
-            ]
-        ]
-        Total count : 4
+            }
+
+        Browse https://api.plivo.com/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/?limit=2&offset=2
+        to view the next page of results. To traverse pages, browse the 'next' and 'previous' urls
         */
 
-        // Get details of a single endpoint
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint for which the details have to be retrieved
+    // Get details of a single endpoint
+    try {
+      Endpoint response = Endpoint.getter("905295392261175") // Endpoint_id
+      .get();
 
-        try {
-            Endpoint resp = api.getEndpoint(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+      System.out.println(response);
+    } catch(PlivoRestException | IOException e) {
+      e.printStackTrace();
+    }
 
-        /*
+    /*
         Sample Output
-        Endpoint [
-            serverCode=200, 
-            username=testEndpoint150310115033, 
-            sipUri=sip:testEndpoint150310115033@phone.plivo.com, 
-            alias=testEndpoint, 
-            endpointId=22386716736727, 
-            password=cc03e747a6afbbcbf8be7668acfebee5, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Endpoint/22386716736727/, 
-            apiId=647de046-c71c-11e4-b932-22000ac50fac, 
-            error=null, 
-            message=null
-        ]
+        {
+            "alias": "Test Account",
+            "api_id": "baa895cb-339d-11eb-a15a-0242ac110004",
+            "application": "/v1/Account/MAXXXXXXXXXXXXXX/Application/1222222222222222/",
+            "endpoint_id": "905295392261175",
+            "password": "e16b2ab8d12314bf4efbd6203906ea6c",
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXX/Application/1222222222222222/",
+            "sip_registered": "false",
+            "sip_uri": "sip:testuser_name22212@phone.plivo.com",
+            "sub_account": null,
+            "username": "testuser_name22121"
+        }
         */
 
-        // Modify an endpoint
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint that has to be modified
-        parameters.put("alias","NewName"); // Values that have to be updated
+    // Modify an endpoint
+    try {
+      EndpointUpdateResponse response = Endpoint.updater("905295392261175") // Endpoint_id
+      .alias("Updated Endpoint Alias") // Alias name
+      .update();
 
-        try {
-            GenericResponse resp = api.editEndpoint(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+      System.out.println(response);
+    } catch(PlivoRestException | IOException e) {
+      e.printStackTrace();
+    }
 
-        /*
+    /*
         Sample Output
-        GenericResponse [
-            serverCode=202, 
-            message=changed, 
-            error=null, 
-            apiId=1ca52b66-c71d-11e4-9107-22000afaaa90
-        ]
+        {
+            "api_id": "122e12f8-339e-11eb-b898-0242ac110003",
+            "message": "changed"
+        }
         */
 
-        // Delete an Endpoint
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("endpoint_id","22386716736727"); // ID of the endpoint that as to be deleted
+    // Delete an Endpoint
+    try {
+      Endpoint.deleter("905295392261234") // Endpoint_id
+      .delete();
 
-        try {
-            GenericResponse resp = api.deleteEndpoint(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+      System.out.println("Deleted successfully.");
+    } catch(PlivoRestException | IOException e) {
+      e.printStackTrace();
+    }
 
-        /*
+    /*
         Sample Output
-        GenericResponse [
-            serverCode=204, 
-            message=no response, 
-            error=null, 
-            apiId=unknown
-        ]
+            Message: Deleted Successfully
 
         Unsuccessful Output
-        GenericResponse [
-            serverCode=404, 
-            message=null, 
-            error=not found, 
-            apiId=45d8f058-c71d-11e4-b932-22000ac50fac
-        ]
+        {
+            "api_id": "495cd1ca-339e-11eb-b9f0-0242ac110004",
+            "error": "not found"
+        }
         */
-    }
-}    
+  }
+}

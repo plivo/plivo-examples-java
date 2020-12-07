@@ -1,150 +1,153 @@
-package sending_sms.sending_sms;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.number.NumberType;
+import com.plivo.api.models.number.PhoneNumber;
+import com.plivo.api.models.base.ListResponse;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.number.NumberResponse;
-import com.plivo.helper.api.response.number.PhoneNumberSearchFactory;
-import com.plivo.helper.api.response.response.GenericResponse;
-import com.plivo.helper.exception.PlivoException;
-
-public class App {
-    public static void main(String[] args) throws IllegalAccessException {
-
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-        
-        // Search for a phone number
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("country_iso","US");
-        parameters.put("type","local");
-        parameters.put("pattern","210");
-        parameters.put("region","Texas");
-
+class PhoneNumberList {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        // Search for a number
         try {
-            PhoneNumberSearchFactory resp = api.searchPhoneNumber(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
-        }  
-        
+            ListResponse<PhoneNumber> response = PhoneNumber.lister("US")
+                    .type(NumberType.LOCAL)
+                    .pattern("210")
+                    .region("Texas")
+                    .list();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+
         // Buy a phone number
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-        params.put("number","12105030864");
-        
         try {
-            NumberResponse resp = api.buyPhoneNumber(params);
-            System.out.println(resp);
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
+            PhoneNumberCreateResponse response = PhoneNumber.creator("121091234466")
+                .create();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
 
         // Modify a number
-        LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-        params.put("number","12105030864");
-        params.put("alias","test");
-        
         try {
-            GenericResponse resp = api.editNumber(params);
-            System.out.println(resp);
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
+            NumberUpdateResponse response = Number.updater("121091234466")
+                .alias("Updated Alias")
+                .update();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
-        
+
         // Unrent a phone number
-        LinkedHashMap<String, String> param = new LinkedHashMap<String, String>();
-        param.put("number","12105030864");
-        
         try {
-            GenericResponse resp = api.unRentNumber(param);
-            System.out.println(resp);
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
+            Number.deleter("121091234466")
+                .delete();
+
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
-        
     }
 }
 
+
 /*
 Sample Output
-PhoneNumberSearchFactory [
-    meta=NumberMeta [
-        previous=null, 
-        totalCount=100, 
-        offset=0, limit=20, 
-        next=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/?limit=20&country_iso=US&pattern=210&region=Texas&offset=20&type=local
-    ], 
-    apiId=3779cd70-c722-11e4-9107-22000afaaa90, 
-    error=null, 
-    numberList=[
-        PhoneNumber [
-            country=UNITED STATES,  
-            lata=566, 
-            monthlyRentalRrate=0.80000, 
-            number=12105030741, 
-            type=fixed, 
-            numberPrefix=210, 
-            rateCenter=SANANTONIO, 
-            region=Texas, UNITED STATES, 
-            resourceURI=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/12105030741/, 
-            restriction=null, 
-            restriction_text=null, 
-            setupRate=0.00000, 
-            isVoiceEnabled=true, 
-            isSmsEnabled=true, 
-            voiceRate=0.00850, 
-            smsRate=0.00000
-        ], PhoneNumber [
-            country=UNITED STATES, 
-            lata=566, 
-            monthlyRentalRrate=0.80000, 
-            number=12105030864, 
-            type=fixed, 
-            numberPrefix=210, 
-            rateCenter=SANANTONIO, 
-            region=Texas, UNITED STATES, 
-            resourceURI=/v1/Account/MAYMFHYZJKMJG0NJG4OG/PhoneNumber/12105030864/, 
-            restriction=null, 
-            restriction_text=null, 
-            setupRate=0.00000, 
-            isVoiceEnabled=true, 
-            isSmsEnabled=true, 
-            voiceRate=0.00850, 
-            smsRate=0.00000
-        ]
-    ]
-]
+{
+  "api_id": "cffc8358-3602-11eb-a011-0242ac110003",
+  "meta": {
+    "limit": 20,
+    "next": "/v1/Account/MAXXXXXXXXXX/PhoneNumber/?limit=20&offset=20&pattern=210&region=Texas&type=local&country_iso=US",
+    "offset": 0,
+    "previous": null,
+    "total_count": 50
+  },
+  "objects": [
+    {
+      "city": "San Antonio",
+      "compliance_requirement": {
+        "business": null,
+        "individual": null
+      },
+      "country": "UNITED STATES",
+      "lata": 566,
+      "mms_enabled": true,
+      "mms_rate": "0.00400",
+      "monthly_rental_rate": "0.18000",
+      "number": "121091234466",
+      "prefix": "210",
+      "prerequisites": [],
+      "rate_center": "San Antonio",
+      "region": "Texas",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXX/PhoneNumber/121091234466/",
+      "restriction": "",
+      "restriction_text": "",
+      "setup_rate": "0.00000",
+      "sms_enabled": true,
+      "sms_rate": "0.00000",
+      "sub_type": "local",
+      "type": "fixed",
+      "voice_enabled": true,
+      "voice_rate": "0.00300"
+    },
+    {
+      "city": "San Antonio",
+      "compliance_requirement": {
+        "business": null,
+        "individual": null
+      },
+      "country": "UNITED STATES",
+      "lata": 566,
+      "mms_enabled": true,
+      "mms_rate": "0.00400",
+      "monthly_rental_rate": "0.18000",
+      "number": "121091234466",
+      "prefix": "210",
+      "prerequisites": [],
+      "rate_center": "San Antonio",
+      "region": "Texas",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXX/PhoneNumber/121091234466/",
+      "restriction": "",
+      "restriction_text": "",
+      "setup_rate": "0.00000",
+      "sms_enabled": true,
+      "sms_rate": "0.00000",
+      "sub_type": "local",
+      "type": "fixed",
+      "voice_enabled": true,
+      "voice_rate": "0.00300"
+    },
+  ]
+}
 
 Rent a number
-NumberResponse [
-    numberStatusList=[
-        NumberStatus [
-            number=12105030864, 
-            status=Success
-        ]
-    ], 
-    status=fulfilled, 
-    error=null, 
-    apiId=fc8554e0-c722-11e4-b932-22000ac50fac
-]
+{
+    "api_id": "aa52882c-1c88-11e4-bd8a-12313f016a39",
+    "message": "created",
+    "numbers": [
+        {
+            "number": "121091234466",
+            "status": "Success"
+        }
+    ],
+    "status": "fulfilled"
+}
 
 Modify a number
-GenericResponse [
-    serverCode=202, 
-    message=changed, 
-    error=null, 
-    apiId=b52fc844-c724-11e4-ac1f-22000ac51de6
-]
+{
+  "message": "changed",
+  "api_id": "5a9fcb68-582d-11e1-86da-6ff39efcb949"
+}
 
 Unrent a phone number
-GenericResponse [   
-    serverCode=204, 
-    message=no response, 
-    error=null, 
+GenericResponse [
+    serverCode=204,
+    message=no response,
+    error=null,
     apiId=unknown
 ]
 */

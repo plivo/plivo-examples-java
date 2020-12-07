@@ -1,37 +1,31 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
 
-import java.util.LinkedHashMap;
+class SpeakDelete {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            Conference.memberSpeakStopper(
+						"Sample_Room", // Conference room name
+						"56842" // Member_id of the conference
+						)
+                    .delete();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class StopPlayMember {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		
-		params.put("conference_name", "1234");
-		params.put("member_id", "1,2");                                /* single member_id or multiple or 'all' */
-		
-		GenericResponse response = new GenericResponse();
-		
-		try 
-		{
-			response = restAPI.stopPlayMember(params);
-			System.out.println(response.apiId);
-		}
-		catch (PlivoException plivoException) {
-			
-			plivoException.printStackTrace();
-		}
-		
-	}
-
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+serverCode=204
+message=no response
+error=null
+apiId=unknown
+
+Deleted successfully.
+*/

@@ -1,59 +1,25 @@
 // voicemail.java
-package plivoexample;
+import com.plivo.api.exceptions.PlivoXmlException;
+import com.plivo.api.xml.Record;
+import com.plivo.api.xml.Response;
+import com.plivo.api.xml.Speak;
+import static spark.Spark.*;
 
-import java.io.IOException;
 
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.xml.elements.PlivoResponse;
-import com.plivo.helper.xml.elements.Record;
-import com.plivo.helper.xml.elements.Speak;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class voicemail extends HttpServlet {
-    private static final long serialVersionUID = 1L;    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-            throws ServletException, IOException {
-        
-        PlivoResponse response = new PlivoResponse();
-        Record record = new Record();
-        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action"); // Submit the result of the record to this URL
-        record.setMethod("GET"); // Submit to action url using GET or POST
-        record.setMaxLength(30); // Maximum number of seconds to record 
-        record.setTranscriptionType("auto"); // The type of transcription required.
-        record.setTranscriptionUrl("https://dry-fortress-4047.herokuapp.com/transcription"); // The URL where the transcription while be sent from Plivo.
-        record.setTranscriptionMethod("GET"); // The method used to invoke transcriptionUrl.
-        
-        Speak speak = new Speak("Leave your message after the tone");
-        
-        try {
-            response.append(speak);
-            response.append(record);
-            System.out.println(response.toXML());
-            resp.addHeader("Content-Type", "text/xml");
-            resp.getWriter().print(response.toXML());;
-        } catch (PlivoException e) {
-            e.printStackTrace();
-        }       
-    }
-
-    public static void main(String[] args) throws Exception {
-        String port = System.getenv("PORT");
-        if(port==null)
-            port ="8000";
-        Server server = new Server(Integer.valueOf(port));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        context.addServlet(new ServletHolder(new voicemail()),"/voicemail");
-        context.addServlet(new ServletHolder(new transcription()),"/transcription");
-        context.addServlet(new ServletHolder(new recordAction()),"/record_action");
-        server.start();
-        server.join();
+public class Record {
+    public static void main(String[] args) {
+        get("/voice_mail", (request, response) -> {
+          Response resp = new Response()
+                .children(
+                        new Speak("Leave message. Press star key when done"),
+                        new Record("http://foo.com/get_recording/")
+                                .transcriptionUrl("http://foo.com/transcription_url/")
+                                .transcriptionMethod("auto")
+                                .transcriptionMethod("GET")
+                                .maxLength(30),
+                        new Speak("Recording not received.")
+                );
+        return resp.toXmlString();
     }
 }
 
@@ -61,33 +27,23 @@ public class voicemail extends HttpServlet {
 Sample Output
 <Response>
     <Speak>Leave your message after the tone</Speak>
-    <Record maxLength="30" transcriptionUrl="https://dry-fortress-4047.herokuapp.com/transcription" 
-        action="https://dry-fortress-4047.herokuapp.com/record_action" transcriptionMethod="GET" method="GET" transcriptionType="auto"/>
+    <Record maxLength="30" transcriptionUrl="http://foo.com/transcription_url/"
+        action="http://foo.com/get_recording/" transcriptionMethod="GET" method="GET" transcriptionType="auto"/>
 </Response>
 */
 
 // recordAction.java
-package plivoexample;
+import static spark.Spark.*;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class recordAction extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        
-        String record_url = req.getParameter("RecordUrl");
-        String record_duration = req.getParameter("RecordingDuration");
-        String record_id = req.getParameter("RecordingID");
-        System.out.println("Record URL : " + record_url + " Record Duration : " + record_duration + " Record ID : " + record_id);
-        resp.getWriter().print("Record URL : " + record_url + " Record Duration : " + record_duration + " Record ID : " + record_id);
+public class Record {
+    public static void main(String[] args) {
+        get("/get_recording", (request, response) -> {
+            String record_url = request.queryParams("RecordUrl");
+            String record_duration = request.queryParams("RecordingDuration");
+            String record_id = request.queryParams("RecordingID");
+            System.out.println("Record URL : " + record_url + " Record Duration : " + record_duration + " Record ID : " + record_id);
+            return "Recording Received";
+        });
     }
 }
 
@@ -98,25 +54,15 @@ Record URL : http://s3.amazonaws.com/recordings_2013/59581736-bb41-11e4-929e-782
 */
 
 // transcription.java
-package plivoexample;
+import static spark.Spark.*;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class transcription extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        
-        String transcription = req.getParameter("transcription");
-        System.out.println("Transcription is : " + transcription);
-        resp.getWriter().print("Transcription is : " + transcription);
+public class Transcripton {
+    public static void main(String[] args) {
+        get("/transcripton_url", (request, response) -> {
+            String transcription = request.queryParams("transcription");
+            System.out.println("Transcription is : " + transcription);
+            return "Transcripton Done";
+        });
     }
 }
 

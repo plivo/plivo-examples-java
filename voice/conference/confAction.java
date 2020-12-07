@@ -1,27 +1,21 @@
 // confAction.java
-package plivoexample;
+import static spark.Spark.*;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class confAction extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String conf_name = req.getParameter("ConferenceName");
-        String conf_uuid = req.getParameter("ConferenceUUID");
-        String conf_mem_id = req.getParameter("ConferenceMemberID");
-        String record_url = req.getParameter("RecordUrl");
-        String record_id = req.getParameter("RecordingID");
-        System.out.println("Conference Name : " + conf_name + " Conference UUID : " + conf_uuid + " Conference Member ID : " + conf_mem_id + 
-                            " Record URL : " + record_url + " Record ID : " + record_id);
-        resp.getWriter().print("Conference Name : " + conf_name + " Conference UUID : " + conf_uuid + " Conference Member ID : " + conf_mem_id + 
-                " Record URL : " + record_url + " Record ID : " + record_id);
+public class ConferenceAction {
+    public static void main(String[] args) {
+        get("/conf_action_url", (request, response) -> {
+            // Unique name of the conference
+            String conference_name = request.queryParams("ConferenceName");
+            // Unique UUID of the conference
+            String conference_uuid = request.queryParams("ConferenceUUID");
+            // Member ID of the user entered into the conference
+            String conference_member_id = request.queryParams("ConferenceMemberID");
+            // Recorded URL of the conference
+            String record_url = request.queryParams("RecordUrl");
+            // Recording ID of the conference
+            String record_id = request.queryParams("RecordingID");
+            // Print the message
+            System.out.println("Conference Name : " + conference_name + " Conference UUID : " + conference_uuid + " Conference Member ID : " + conference_member_id + " Record URL : " + record_url + " Record ID : " + record_id);
+        });
     }
 }

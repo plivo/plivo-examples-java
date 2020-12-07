@@ -1,61 +1,40 @@
-package com.plivo.test;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.message.Message;
 
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-
-import com.plivo.helper.api.response.message.MessageResponse;
-import com.plivo.helper.exception.PlivoException;
-
-public class GetDetails {
-
-    public static void main(String[] args) {
-
-        String authId = "Your AUTH_ID";
-        String authToken = "Your AUTH_TOKEN";
-
-        RestAPI api = new RestAPI(authId, authToken, "v1");
-
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("record_id", "0936ec98-7c4c-11e4-9bd8-22000afa12b9"); // Message UUID for which the details have to be retrieved
-        
-        try {
-            Message msg = api.getMessage(parameters);
-
-            // Print the Message Details
-            System.out.println(msg);
-
-            // Print the number of SMS units
-            System.out.println("Units : " + msg.units);
-
-            // Print the state of the message
-                System.out.println("Message State : " + msg.messageState);
-            
-        } catch (PlivoException e) {
-            System.out.println(e.getLocalizedMessage());
+class MessageGet
+{
+    public static void main(String [] args)
+    {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try
+        {
+            Message response = Message.getter("87aeb954-3558-11eb-8618-0242ac110003") // Message UUID of the details to be fetched
+                    .get();
+            System.out.println(response);
+        }
+        catch (PlivoRestException | IOException e)
+        {
+            e.printStackTrace();
         }
     }
 }
-
 // Sample Output
 /*
-Message [
-    cloudRate=null, 
-    carrierRate=null, 
-    messageDirection=outbound, 
-    toNumber=919663489033, 
-    messageState=delivered, 
-    totalAmount=0.02600, 
-    fromNumber=18583650866, 
-    messageUUID=0936ec98-7c4c-11e4-9bd8-22000afa12b9, 
-    messageTime=2014-12-05 12:27:54+05:30, 
-    resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/0936ec98-7c4c-11e4-9bd8-22000afa12b9/, 
-    messageType=sms, 
-    totalRate=0.00650, 
-    units=4, 
-    error=null, 
-    apiId=dc9dc0c2-c713-11e4-af95-22000ac54c79
-]
-Units : 4
-Message State : delivered
+{
+  "api_id": "c02284c6-355a-11eb-b46a-0242ac110004",
+  "error_code": "450",
+  "from_number": "11111111111",
+  "message_direction": "outbound",
+  "message_state": "failed",
+  "message_time": "2020-12-03 16:43:11.470139+05:30",
+  "message_type": "sms",
+  "message_uuid": "87aeb954-3558-11eb-8618-0242ac110003",
+  "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+  "to_number": "2222222222",
+  "total_amount": "0.00000",
+  "total_rate": "0.00000",
+  "units": 1
+}
 */

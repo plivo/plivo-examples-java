@@ -1,30 +1,21 @@
-package sending_sms.sending_sms;
+package com.plivo.api.samples.call;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.call.Call;
 
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.response.GenericResponse;
-import com.plivo.helper.exception.PlivoException;
-
-public class App {
-    public static void main(String[] args) throws IllegalAccessException {
-
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("call_uuid","defb0706-86a6-11e4-b303-498d468c930b"); // UUID of the call to be hung up
-
+class CallDelete {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
         try {
-            GenericResponse resp = api.hangupCall(parameters);
-            System.out.println(resp);   
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
-        }  
+            Call.deleter("eba53b9e-8fbd-45c1-9444-696d2172fbc8") // UUID of the call to hangup
+                .delete();
+
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

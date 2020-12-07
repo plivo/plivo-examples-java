@@ -1,58 +1,38 @@
-package plivoexample;
+import static spark.Spark.*;
+import com.plivo.api.xml.Message;
+import com.plivo.api.xml.Response;
 
-import java.io.IOException;
+public class ForwardSMS {
+    public static void main(String[] args) {
+        get("/forward_sms", (request, response) -> {
+            // Sender's phone number
+            String from_number = request.queryParams("From");
+            // Receiver's phone number - Plivo number
+            String to_number = request.queryParams("To");
+            // The text which was received
+            String text = request.queryParams("Text");
+            // Returns the response in application/xml type
+            response.type("application/xml");
+            // Print the message
+            System.out.println(from_number + " " + to_number + " " + text);
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.xml.elements.Message;
-import com.plivo.helper.xml.elements.PlivoResponse;
-
-public class forwardSms extends HttpServlet {
-    private static final long serialVersionUID = 1L;    
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-            throws ServletException, IOException {
-        String from_number = req.getParameter("From");
-        String to_number = req.getParameter("To");
-        String text = req.getParameter("Text");
-        String to_forward = "3333333333";
-        System.out.println("From : " + from_number + " To : " + to_number + " Text : " + text);
-        
-        PlivoResponse response = new PlivoResponse();
-        Message msg = new Message(text);
-        msg.setSource(to_number);
-        msg.setDestination(to_forward);
-        try {
-            response.append(msg);
-            System.out.println(response.toXML());
-            resp.addHeader("Content-Type", "text/xml");
-            resp.getWriter().print(response.toXML());;
-        } catch (PlivoException e) {
-            e.printStackTrace();
-        }       
-    }
-
-    public static void main(String[] args) throws Exception {
-        String port = System.getenv("PORT");
-        if(port==null)
-            port ="8080";
-        Server server = new Server(Integer.valueOf(port));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        context.addServlet(new ServletHolder(new forwardSms()),"/forward_sms");
-        server.start();
-        server.join();
+            // The phone number to which the SMS has to be forwarded
+            String to_forward = "+3333333333";
+            // send the details to generate an XML
+            Response res = new Response().children(
+                    // from_number,to_forward,text is being passed
+                    new Message(from_number, to_forward, text).callbackMethod("POST")
+                            .callbackUrl("http://foo.com/sms status/").type("sms"));
+            // Returns the XML
+            return res.toXmlString();
+        });
     }
 }
 
 
 // Sample Output
 /*
-From : 1111111111, To : 2222222222, Text : Hi, from Plivo 
+From : 1111111111, To : 2222222222, Text : Hi, from Plivo
 <Response>
     <Message dst="3333333333" src="2222222222">Hi, from Plivo</Message>
 </Response>

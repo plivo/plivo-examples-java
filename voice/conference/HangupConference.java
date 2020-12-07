@@ -1,35 +1,30 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
 
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class HangupAConference {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		params.put("conference_name", "1234");
-		
-		GenericResponse genResponse = new GenericResponse();
-		
-		try
-		{
-			genResponse = restAPI.hangupConference(params);
-			System.out.println(genResponse.apiId);
-		}
-		catch (PlivoException plivoException) {
-			
-			plivoException.printStackTrace();
-		}
-		
-	}
-
+/**
+ * Example for Conference delete
+ */
+class ConferenceDelete {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            Conference.deleter("Sample_Room") // Conference room name that needs to be terminated.
+                    .delete();
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+serverCode=204
+message=no response
+error=null
+apiId=unknown
+
+Deleted successfully.
+*/

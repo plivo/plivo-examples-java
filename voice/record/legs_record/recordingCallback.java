@@ -1,30 +1,36 @@
-package plivoexample;
+// RecordCallback.java
+import static spark.Spark.*;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class recordingCallback extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        
-        // The Callback URL of record api will return the B Leg record details.
-
-        String record_url = req.getParameter("RecordUrl");
-        String record_duration = req.getParameter("RecordingDuration");
-        String record_id = req.getParameter("RecordingID");
-        System.out.println("Record URL : " + record_url + " Record Duration : " + record_duration + " Record ID : " + record_id);
-        resp.getWriter().print("Record URL : " + record_url + " Record Duration : " + record_duration + " Record ID : " + record_id);
+public class RecordCallback {
+    public static void main(String[] args) {
+        get("/Record_callback_url", (request, response) -> {
+            // Unique name of the conference
+            String conference_name = request.queryParams("ConferenceName");
+            // The action occured within conference
+            String conference_action = req.getParameter("ConferenceAction");
+            // Unique UUID of the conference
+            String conference_uuid = request.queryParams("ConferenceUUID");
+            // Member ID of the user entered into the conference
+            String conference_member_id = request.queryParams("ConferenceMemberID");
+            // Recorded URL of the conference
+            String record_url = request.queryParams("RecordUrl");
+            // Recording ID of the conference
+            String record_id = request.queryParams("RecordingID");
+            // Duration of recording in seconds.
+            String record_duration = request.queryParams("RecordingDuration");
+            // Duration of recording in Milliseconds
+            String record_duration_ms = request.queryParams("RecordingDurationMs");
+            // When the recording started (epoch time UTC) in milliseconds
+            String record_start_ms = request.queryParams("RecordingStartMs");
+            // When the recording ended (epoch time UTC) in milliseconds.
+            String record_end_ms = request.queryParams("RecordingEndMs");
+            // Print the message
+            System.out.println(
+            "Conference Name : " + conference_name + "Conference Action : " + conference_action +
+            " Conference UUID : " + conference_uuid + " Conference Member ID : " + conference_member_id +
+            " Record URL : " + record_url + " Record ID : " + record_id+
+            " Record Duration : " + record_duration+ " Record Duration(ms) : " + record_duration_ms+
+            " Record start duration(ms) : " + record_start_ms+ " Record end duration(ms) : " + record_end_ms);
+        });
     }
 }
-
-/*
-Sample Output
-Record URL : http://s3.amazonaws.com/recordings_2013/11112222-4444-11e4-a4c8-782bcb5bb8af.mp3 Recording Duration : 22 Recording ID : 693e61fd-8150-4091-a0f8-561d4a434288 
-*/

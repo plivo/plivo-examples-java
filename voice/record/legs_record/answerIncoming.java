@@ -1,74 +1,28 @@
-package plivoexample;
+import com.plivo.api.exceptions.PlivoXmlException;
+import com.plivo.api.xml.*;
+import com.plivo.api.xml.Number;
 
-import java.io.IOException;
-
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.xml.elements.Dial;
-import com.plivo.helper.xml.elements.Number;
-import com.plivo.helper.xml.elements.PlivoResponse;
-import com.plivo.helper.xml.elements.Record;
-import com.plivo.helper.xml.elements.Speak;
-import com.plivo.helper.xml.elements.Wait;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public class answerIncoming extends HttpServlet {
-    private static final long serialVersionUID = 1L;    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-            throws ServletException, IOException {
-
-        // A call is made to the plivo number. 
+class RecordACompleteCallSession {
+    public static void main(String[] args) throws PlivoXmlException {
+        // A call is made to the plivo number.
         // The answer_url returns and XML that starts recording the session and then dials to another number.
         // When the user pick up, the B Leg record starts and a music is played.
-
         // The action URL of the Record tag will return the Session recording details
-        
-        PlivoResponse response = new PlivoResponse();
-        Record record = new Record();
-        record.setAction("https://dry-fortress-4047.herokuapp.com/record_action"); // Submit the result of the record to this URL
-        record.setMethod("GET"); // Submit to action url using GET or POST
-        record.setRedirect(false); // If false, don't redirect to action url, only request the url and continue to next element.
-        record.setRecordSession(true); // Record current call session in background 
-        Wait wait = new Wait();
-        wait.setLength(5); // Time to wait in seconds
-        Speak spk = new Speak("Connecting your call!");
-        Dial dial = new Dial();
-        dial.setCallbackUrl("https://dry-fortress-4047.herokuapp.com/dial_outbound"); // URL that is notified by Plivo when one of the following events occur: called party is bridged with caller, called party hangs up, caller has pressed any digit
-        dial.setCallbackMethod("GET"); // Method used to notify callbackUrl
-        Number num = new Number("919663489033");
-        
-        try {
-            dial.append(num);
-            response.append(record);
-            response.append(wait);
-            response.append(spk);
-            response.append(dial);
-            System.out.println(response.toXML());
-            resp.addHeader("Content-Type", "text/xml");
-            resp.getWriter().print(response.toXML());;
-        } catch (PlivoException e) {
-            e.printStackTrace();
-        }       
-    }
-
-    public static void main(String[] args) throws Exception {
-        String port = System.getenv("PORT");
-        if(port==null)
-            port ="8000";
-        Server server = new Server(Integer.valueOf(port));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        context.addServlet(new ServletHolder(new answerIncoming()),"/answer_incoming");
-        context.addServlet(new ServletHolder(new dialOutbound()),"/dial_outbound");
-        context.addServlet(new ServletHolder(new recordingCallback()),"/recording_callback");
-        context.addServlet(new ServletHolder(new recordAction()),"/reord_action");
-        server.start();
-        server.join();
+        Response response = new Response()
+                .children(
+                        new Record("http://foo.com/get_recording/")
+                                .method("GET")
+                                .recordSession(true)
+                                .redirect(false),
+                        new Speak("Connecting your call!"),
+                        new Dial()
+                                .children(
+                                        new Number("111111111")
+                                )
+                        .callbackUrl("http://foo.com/callback/")
+                        .callbackMethod("GET")
+                );
+        System.out.println(response.toXmlString());
     }
 }
 
@@ -76,12 +30,11 @@ public class answerIncoming extends HttpServlet {
 Sample Output
 
 <Response>
-    <Record action="https://dry-fortress-4047.herokuapp.com/record_action" recordSession="true" redirect="false" method="GET"/>
-    <Wait length="5"/>
-    <Speak>Connecting your call!</Speak>
-    <Dial callbackUrl="https://dry-fortress-4047.herokuapp.com/dial_outbound" callbackMethod="GET">
-        <Number>919663489033</Number>
-    </Dial>
+   <Record action="http://foo.com/get_recording/" method="GET" redirect="false" recordSession="true" />
+   <Speak>Connecting your call!</Speak>
+   <Dial callbackUrl="http://foo.com/callback/" callbackMethod="GET">
+      <Number>111111111</Number>
+   </Dial>
 </Response>
 
 */

@@ -1,144 +1,193 @@
-package com.plivo.test;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.message.Message;
+import com.plivo.api.models.base.ListResponse;
 
-import java.util.LinkedHashMap;
 
-import com.plivo.helper.api.client.*;
-
-import com.plivo.helper.api.response.message.MessageResponse;
-import com.plivo.helper.exception.PlivoException;
-
-public class SendAlphanumeric {
-
-    public static void main(String[] args) {
-        
-        String authId = "Your AUTH_ID";
-        String authToken = "Your AUTH_TOKEN";
-
-        RestAPI api = new RestAPI(authId, authToken, "v1");
-        // Get details off all the messages
-        try {
-            MessageFactory msg = api.getMessages();
-            // Print the complete response
-            System.out.println(msg);
-        } catch (PlivoException e) {
-            System.out.println(e.getLocalizedMessage());
+class GetAllMessageList
+{
+    public static void main(String [] args)
+    {
+        Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+        try
+        {
+            ListResponse<Message> response = Message.lister()
+                    .limit(5)
+                    .offset(0)
+                    .list();
+            System.out.println(response);
+            // Prints only the message_uuid
+            System.out.println(response.getMessageUuid());
         }
-
-        // Filtering the records
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("limit", "2"); // The number of results per page
-        parameters.put("offset", "0"); // The number of value items by which the results should be offset
-        parameters.put("message_state", "sent"); // The state of the message to be filtered
-        parameters.put("message_direction", "outbound"); // The direction of te message to be fltered
-        parameters.put("subaccount", "SubAccount_AUTH_ID"); // The id of the subaccount, if SMS details of the subaccount is needed.
-        parameters.put("message_time__gte","2015-07-26%2011%3A47" ); // Filter out messages according to the time of completion.
-
-        try {
-            MessageFactory msg = api.getMessages(parameters);
-            // Print the complete response
-            System.out.println(msg);
-        } catch (PlivoException e) {
-            System.out.println(e.getLocalizedMessage());
-        }   
+        catch (PlivoRestException | IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
 
+// Filtering the records
+class GetAllMessageLists
+      {
+        public static void main(String [] args)
+          {
+              Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+                try
+                {
+                    ListResponse<Message> response = Message.lister()
+                            .messageState(MessageState.DELIVERED)
+                            .limit(5)
+                            .offset(0)
+                            .list();
+                    System.out.println(response);
+                }
+                catch (PlivoRestException | IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 // Sample Output without filter
 /*
-MessageFactory [
-    serverCode=200, 
-    meta=MessageMeta [
-        previous=null, 
-        totalCount=524, 
-        offset=0, 
-        limit=20, next=/v1/Account/XXXXXXXXXXXXXXX/Message/?limit=20&offset=20
-    ], 
-    apiId=470cf77a-c714-11e4-af95-22000ac54c79, 
-    messageList=[
-        Message [
-            cloudRate=null, 
-            carrierRate=null,
-            messageDirection=outbound, 
-            toNumber=2222222222, 
-            messageState=delivered, 
-            totalAmount=0.00650, 
-            fromNumber=1111111111, 
-            messageUUID=7e02984e-c713-11e4-8672-22000aff09d1, 
-            messageTime=2015-03-10 16:22:06+05:30, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/7e02984e-c713-11e4-8672-22000aff09d1/, 
-            messageType=sms, 
-            totalRate=0.00650, 
-            units=1, 
-            error=null, 
-            apiId=null
-        ], Message [
-            cloudRate=null, 
-            carrierRate=null, 
-            messageDirection=outbound, 
-            toNumber=3333333333, 
-            messageState=delivered, 
-            totalAmount=0.00650, 
-            fromNumber=1111111111, 
-            messageUUID=7e026888-c713-11e4-a564-22000ac6807d, 
-            messageTime=2015-03-10 16:22:06+05:30, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/7e026888-c713-11e4-a564-22000ac6807d/, 
-            messageType=sms, 
-            totalRate=0.00650, 
-            units=1, 
-            error=null, 
-            apiId=null
-        ]
-    ], 
-    error=null
-]
+{
+  "api_id": "61c9103e-355a-11eb-bc7f-0242ac110004",
+  "meta": {
+    "limit": 5,
+    "next": "/v1/Account/MAXXXXXXXXXXX/Message/?limit=5&offset=5",
+    "offset": 0,
+    "previous": null,
+    "total_count": 89
+  },
+  "objects": [
+    {
+      "error_code": "450",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "failed",
+      "message_time": "2020-12-03 16:43:11.470139+05:30",
+      "message_type": "sms",
+      "message_uuid": "87aeb954-3558-11eb-8618-0242ac110003",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00000",
+      "total_rate": "0.00000",
+      "units": 1
+    },
+    {
+      "error_code": "450",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "failed",
+      "message_time": "2020-12-03 16:42:26.700284+05:30",
+      "message_type": "sms",
+      "message_uuid": "6d006e9a-3558-11eb-af78-0242ac110007",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00000",
+      "total_rate": "0.00000",
+      "units": 1
+    },
+    {
+      "error_code": "450",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "failed",
+      "message_time": "2020-12-03 16:42:26.700284+05:30",
+      "message_type": "sms",
+      "message_uuid": "6cff70da-3558-11eb-af78-0242ac110007",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00000",
+      "total_rate": "0.00000",
+      "units": 1
+    },
+    {
+      "error_code": "450",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "failed",
+      "message_time": "2020-12-03 01:20:04.724769+05:30",
+      "message_type": "sms",
+      "message_uuid": "929c145a-34d7-11eb-b447-0242ac110004",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00000",
+      "total_rate": "0.00000",
+      "units": 1
+    },
+    {
+      "error_code": "450",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "failed",
+      "message_time": "2020-12-03 01:18:15.957191+05:30",
+      "message_type": "sms",
+      "message_uuid": "51c77690-34d7-11eb-a029-0242ac110004",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/87aeb954-3558-11eb-8618-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00000",
+      "total_rate": "0.00000",
+      "units": 1
+    }
+  ]
+}
 
 Sample Ouput with filter
 
-MessageFactory [
-    serverCode=200, 
-    meta=MessageMeta [
-        previous=null, 
-        totalCount=101, 
-        offset=0, 
-        limit=2, 
-        next=/v1/Account/XXXXXXXXXXXXXXX/Message/?message_state=sent&limit=2&offset=2&message_direction=outbound
-    ], 
-    apiId=dae130ce-c714-11e4-af95-22000ac54c79, 
-    messageList=[
-        Message [
-            cloudRate=null, 
-            carrierRate=null, 
-            messageDirection=outbound, 
-            toNumber=2222222222, 
-            messageState=sent, 
-            totalAmount=0.00700, 
-            fromNumber=1111111111, 
-            messageUUID=25d0dd3c-bb53-11e4-8ced-22000ae3827c, 
-            messageTime=2015-02-23 17:27:31+05:30, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/25d0dd3c-bb53-11e4-8ced-22000ae3827c/, 
-            messageType=sms, 
-            totalRate=0.00350, 
-            units=2, 
-            error=null, 
-            apiId=null
-        ], Message [
-            cloudRate=null, 
-            carrierRate=null, 
-            messageDirection=outbound, 
-            toNumber=3333333333, 
-            messageState=sent, 
-            totalAmount=0.00700, 
-            fromNumber=1111111111, 
-            messageUUID=f22a2678-bb52-11e4-8ab5-22000af8012c, 
-            messageTime=2015-02-23 17:26:05+05:30, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXX/Message/f22a2678-bb52-11e4-8ab5-22000af8012c/, 
-            messageType=sms, 
-            totalRate=0.00350, 
-            units=2, 
-            error=null, 
-            apiId=null
-        ]
-    ], 
-    error=null
-]
+INFO: {
+  "api_id": "f78b91a6-3559-11eb-9aed-0242ac110003",
+  "meta": {
+    "limit": 5,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total_count": 3
+  },
+  "objects": [
+    {
+      "error_code": "000",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "delivered",
+      "message_time": "2020-12-03 01:17:14.458719+05:30",
+      "message_type": "sms",
+      "message_uuid": "2d1f8aee-34d7-11eb-b447-0242ac110004",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/65cf8142-34d6-11eb-9129-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00901",
+      "total_rate": "0.00901",
+      "units": 1
+    },
+    {
+      "error_code": "000",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "delivered",
+      "message_time": "2020-12-03 01:13:38.306355+05:30",
+      "message_type": "sms",
+      "message_uuid": "ac494f04-34d6-11eb-a029-0242ac110004",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/65cf8142-34d6-11eb-9129-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00901",
+      "total_rate": "0.00901",
+      "units": 1
+    },
+    {
+      "error_code": "000",
+      "from_number": "111111111111",
+      "message_direction": "outbound",
+      "message_state": "delivered",
+      "message_time": "2020-12-03 01:11:40.067586+05:30",
+      "message_type": "sms",
+      "message_uuid": "65cf8142-34d6-11eb-9129-0242ac110003",
+      "resource_uri": "/v1/Account/MAXXXXXXXXXXX/Message/65cf8142-34d6-11eb-9129-0242ac110003/",
+      "to_number": "2222222222",
+      "total_amount": "0.00901",
+      "total_rate": "0.00901",
+      "units": 1
+    }
+  ]
+}
 */
