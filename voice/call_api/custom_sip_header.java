@@ -1,47 +1,47 @@
-package sending_sms.sending_sms;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.call.Call;
+import com.plivo.api.models.call.CallCreateResponse;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.call.Call;
-import com.plivo.helper.exception.PlivoException;
-
-public class App {
-    public static void main(String[] args) throws IllegalAccessException {
-
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("to","sip:abcd150108095716@phone.plivo.com"); // The phone numer to which the all has to be placed. Sip endpoints must be prefixed with sip:
-        parameters.put("from","1111111111"); // The phone number to be used as the caller id
-        parameters.put("answer_url","https://dry-fortress-4047.herokuapp.com/speak"); // The URL invoked by Plivo when the outbound call is answered
-        parameters.put("answer_method","GET"); // Method to invoke the answer_url
-        parameters.put("sip_headers", "Test=Sample"); // List of SIP headers in the form of 'key=value' pairs, separated by commas.
-
+class CallCreate {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
         try {
-            Call resp = api.makeCall(parameters);
-            System.out.println(resp);  
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
-        }  
+          Map<String, String> headers = new HashMap<>();
+            headers.put("key", "value");
+            CallCreateResponse response = Call.creator(
+            "+11111111111", // The phone number to be used as the caller id
+            Collections.singletonList("+222222222"), // The phone numers to which the all has to be placed. The numbers are separated by "<" delimiter.
+            "http://s3.amazonaws.com/static.plivo.com/answer.xml") // The URL invoked by Plivo when the outbound call is answered
+                    .answerMethod("GET") // method to invoke the answer_url
+                    .create();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
-/* 
+/*
 Sample Output
-serverCode=201
-message=call fired
-requestUUID=8501b9f8-7115-449c-8c41-4280e663bde1
-apiId=b462f0e2-b6c8-11e4-9107-22000afaaa90
-error=null
+{
+  "api_id": "866f82ac-352e-11eb-8997-0242ac110007",
+  "message": "calls fired",
+  "request_uuid": [
+    "42021c3b-3104-4214-90fc-9fe7260f75a5",
+  ]
+}
 
-The SIP header can be seen as a query parameter in the answer_url
+
+
+The SIP header can be seen as a query parameter in the answer_url as "X-PH-key=value"
 path="/speak?Direction=outbound&From=1111111111&ALegUUID=b4b71302-b6c8-11e4-95c7-fb0a4c731172&BillRate=0.00300&
-To=sip%3Atest150108095716%40phone.plivo.com&X-PH-Test=Sample&CallUUID=b4b71302-b6c8-11e4-95c7-fb0a4c731172&
+To=sip%3Atest150108095716%40phone.plivo.com&X-PH-key=value&CallUUID=b4b71302-b6c8-11e4-95c7-fb0a4c731172&
 ALegRequestUUID=8501b9f8-7115-449c-8c41-4280e663bde1&RequestUUID=8501b9f8-7115-449c-8c41-4280e663bde1&
 SIP-H-To=%3Csip%3Atest150108095716%40phone.plivo.com%3E%3Btag%3DqdF2R1oMgcOZioAZ6fuyWpVxPtMENeXC&CallStatus=in-progress&Event=StartApp"
+*/

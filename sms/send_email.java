@@ -1,111 +1,70 @@
-package plivoexample;
-import java.io.IOException;
 import java.util.Properties;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import static spark.Spark.*;
 
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.xml.elements.PlivoResponse;
+//Incoming SMS, forward to an email
 
-public class smsToEmail extends HttpServlet{
-    private static final long serialVersionUID = 1L;    
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-            throws ServletException, IOException {
-        String from_number = req.getParameter("From");
-        String to_number = req.getParameter("To");
-        String text = req.getParameter("Text");
-        System.out.println("From : " + from_number + " To : " + to_number + " Text : " + text);
-        
-        try {
-          String result = smsToEmail.sendEmail(text);
-          resp.getWriter().print(result);
-        } catch (Exception ex) {
-          ex.printStackTrace();
-          resp.getWriter().print("Error");
-        }      
-    }
-    
-    public static String sendEmail(String text){
-        
-        // Recipient's email ID
-        String to = "To mail address";
+public class SendEmail {
+    public static void main(String[] args) {
+        get("/send_to_email", (request, response) -> {
+            // Sender's phone number
+            String from_number = request.queryParams("From");
+            // Receiver's phone number - Plivo number
+            String to_number = request.queryParams("To");
+            // The text which was received
+            String text = request.queryParams("Text");
 
-        // Sender's email ID
-        String from = "From mail address";
-        final String username = "Your mail address";
-        final String password = "Your Password";
+            // Print the message
+            System.out.println(from_number + " " + to_number + " " + text);
 
-        String host = "smtp.gmail.com";
+            //authentication info
+            final String username = "yourUsername@email.com";
+            final String password = "password";
+            String fromEmail = "fromemail@yahoo.com";
+            String toEmail = "toEmail@example.com";
 
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.port", "587");
+            Properties properties = new Properties();
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.starttls.enable", "true");
+            properties.put("mail.smtp.host", "smtp.gmail.com");
+            properties.put("mail.smtp.port", "587");
 
-        // Get the Session object
-        Session session = Session.getInstance(props,
-        new javax.mail.Authenticator() {
-           protected PasswordAuthentication getPasswordAuthentication() {
-              return new PasswordAuthentication(username, password);
-           }
+            Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username,password);
+                }
+            });
+            //Start our mail message
+            MimeMessage msg = new MimeMessage(session);
+            try {
+                msg.setFrom(new InternetAddress(fromEmail));
+                msg.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+                msg.setSubject("Subject Line");
+
+                Multipart emailContent = new MimeMultipart();
+
+                //Text body part
+                MimeBodyPart textBodyPart = new MimeBodyPart();
+                // Passing the receved message content
+                textBodyPart.setText(text);
+
+                Transport.send(msg);
+                System.out.println("Sent message successfully....");
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+
+            return "Message sent to Email";
         });
-
-        try {
-           // Create a default MimeMessage object.
-           Message message = new MimeMessage(session);
-
-           // Set From: header field of the header.
-           message.setFrom(new InternetAddress(from));
-
-           // Set To: header field of the header.
-           message.setRecipients(Message.RecipientType.TO,
-           InternetAddress.parse(to));
-
-           // Set Subject: header field
-           message.setSubject("Testing Subject");
-
-           // Set the actual message
-           message.setText(text);
-
-           // Send message
-           Transport.send(message);
-
-           System.out.println("Sent message successfully....");
-           
-           return "Sent message successfully!";
-
-        } catch (MessagingException e) {
-              throw new RuntimeException(e);
-        }
-    }
-
-     public static void main(String[] args) throws Exception {
-        String port = System.getenv("PORT");
-        if(port==null)
-            port ="8080";
-        Server server = new Server(Integer.valueOf(port));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        context.addServlet(new ServletHolder(new smsToEmail()),"/receive_sms");
-        server.start();
-        server.join();
     }
 }
 /*

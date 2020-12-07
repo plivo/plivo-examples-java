@@ -1,42 +1,36 @@
-package com.plivo.test;
+import java.io.IOException;
+import java.util.Collections;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.call.Call;
+import com.plivo.api.models.call.CallCreateResponse;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.call.Call;
-import com.plivo.helper.exception.PlivoException;
-
-public class App {
-    public static void main(String[] args) throws IllegalAccessException {
-
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-        
-
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("to","2222222222<3333333333"); // The phone numers to which the all has to be placed. The numbers are separated by "<" delimiter.
-        parameters.put("from","1111111111"); // The phone number to be used as the caller id
-        parameters.put("answer_url","https://dry-fortress-4047.herokuapp.com/speak"); // The URL invoked by Plivo when the outbound call is answered
-        parameters.put("answer_method","GET"); // method to invoke the answer_url
-
+class CallCreate {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
         try {
-           BulkCall resp = api.makeBulkCall(parameters);
-           System.out.println(resp);   
-        }catch (PlivoException e){  
-           System.out.println(e.getLocalizedMessage());
+            CallCreateResponse response = Call.creator(
+            "+11111111111", // The phone number to be used as the caller id
+            Collections.singletonList("+222222222<+333333333"), // The phone numers to which the all has to be placed. The numbers are separated by "<" delimiter.
+            "http://s3.amazonaws.com/static.plivo.com/answer.xml") // The URL invoked by Plivo when the outbound call is answered
+                    .answerMethod("GET") // method to invoke the answer_url
+                    .create();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
     }
 }
 
 /*
 Sample Output
-serverCode: 201
-message: calls fired
-requestUUID: [1ddf96f2-fed2-4412-8fbc-fb10bf77b9b3, 6695c385-7fc5-4bbb-bb36-f26fc1e0ca67]
-apiId: 50d7d542-c8cf-11e4-8ccf-22000afb14f7
-error: null
+{
+  "api_id": "866f82ac-352e-11eb-8997-0242ac110007",
+  "message": "calls fired",
+  "request_uuid": [
+    "42021c3b-3104-4214-90fc-9fe7260f75a5",
+    "2577d827-9a92-4e83-98cd-603c7b1b36e9"
+  ]
+}
 */

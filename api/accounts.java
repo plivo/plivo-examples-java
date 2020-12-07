@@ -1,237 +1,220 @@
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.account.Account;
-import com.plivo.helper.api.response.account.SubAccount;
-import com.plivo.helper.api.response.account.SubAccountFactory;
-import com.plivo.helper.api.response.response.GenericResponse;
-import com.plivo.helper.exception.PlivoException;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.account.Account;
+import com.plivo.api.models.account.Subaccount;
+import com.plivo.api.models.account.SubaccountCreateResponse;
+import com.plivo.api.models.base.ListResponse;
 
 public class App {
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) {
 
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
-        
-        // Get Details of account
+        String auth_id = "YOUR_AUTH_ID";
+        String auth_token = "YOUR_AUTH_TOKEN";
+
+        Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
+
         try {
-            Account resp = api.getAccount();
-            System.out.print(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            Account response = Account.getter()
+                .get();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
 
         /*
         Sample Output
-        Account [
-            city=Sample City
-            name=Sample
-            cashCredits=78.02225
-            created=null
-            enabled=null
-            modified=null
-            error=null
-            apiId=d2576d1e-b108-11e4-96e3-22000abcb9af
-            postpaid=null
-            state=
-            address=Testig address
-            timezone=Asia/Kolkata
-            authID=XXXXXXXXXXXXXXXXX
-            resourceURI=/v1/Account/XXXXXXXXXXXXXXXXX/
-        ]
+        {
+            "account_type": "standard",
+            "address": "Test Address",
+            "api_id": "5ec94bc2-3395-11eb-9574-0242ac110002",
+            "auth_id": "MAMDC1NXXXXXXXXXXX",
+            "auto_recharge": false,
+            "billing_mode": "prepaid",
+            "cash_credits": "2.98629",
+            "city": "Austin",
+            "name": "Test Account",
+            "resource_uri": "/v1/Account/MAMDC1NXXXXXXXXXXX/",
+            "state": "Karnataka",
+            "timezone": "Asia/Kolkata"
+        }
         */
 
         // Modify account
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("name","Test"); // Name of the account holder or business
-        parameters.put("city","Test City"); // City of the account holder
-        parameters.put("address","Sample address"); // Address of the account holder 
-        parameters.put("timezone","Asia/Kolkata"); // Time zone of the account holder
-
         try {
-            GenericResponse resp = api.editAccount(parameters);
-            System.out.print(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            AccountUpdateResponse response = Account.updater()
+                .name("Test Account")
+                .city("Austin")
+                .address("Test Address")
+                .update();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
 
         /*
         Sample Output
-        GenericResponse [
-            serverCode=202
-            message=changed
-            error=null
-            apiId=3b6fb968-b10a-11e4-ac1f-22000ac51de6
-        ]   
+       {
+           "api_id": "d8a39cc8-338a-11eb-9434-0242ac110003",
+           "message": "changed"
+        }
         */
 
         // Create a sub account
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("name","Testing"); // Name of the subaccount
-        parameters.put("enabled","Test City"); // Specify if the subaccount should be enabled or not
-
         try {
-            SubAccount resp = api.createSubaccount(parameters);
-            System.out.print(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            SubaccountCreateResponse response = Subaccount.creator("Test Subaccount") // Name of the Subaccount
+                .enabled(true) // Specify if the Subaccount should be enabled or not.
+                .create();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
 
         /*
         Sample Output
-        SubAccount [
-            account=null, 
-            error=null, 
-            apiId=46be5f96-c725-11e4-af95-22000ac54c79, 
-            authId=SANJEYZGU1NWQ4YMQ1Y2, 
-            authToken=ZmYxY2YxZmZjNzQxYTVjYTQzODUwY2QwZDhlY2I0, 
-            newAuthToken=null, 
-            resourceUri=null, 
-            createdOn=null, 
-            isEnabled=null, 
-            lastModifiedOn=null, 
-            name=null, 
-            message=created
-        ]
+        {
+            "api_id": "bf7c1b20-3395-11eb-9574-0242ac110002",
+            "auth_id": "SAMZHIOWQ2Y2XXXXXXXX",
+            "auth_token": "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "message": "created"
+        }
         */
 
         // Modify a sub account
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("subauth_id","SAYWJLYWI1MZU1MWY4YT"); // Auth ID of the sub acccount that has to be modified
-        parameters.put("name","Testing4"); // Name of the subaccount
-
         try {
-            GenericResponse resp = api.editSubaccount(parameters);
-            System.out.print(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
-        }
+            SubaccountUpdateResponse response = Subaccount.updater(
+                    "SAXXXXXXXXXXXXXXXXXX", // Auth ID of the sub acccount that has to be modified
+                    "Updated Subaccount Name" // Name of the subaccount
+                )
+                .update();
 
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
         /*
         Sample Output
-        GenericResponse [
-            serverCode=201, 
-            message=created, 
-            error=null, 
-            apiId=8e2f7e1e-c725-11e4-8ccf-22000afb14f7
-        ]
+        {
+            "api_id": "efe633cc-3395-11eb-9434-0242ac110003",
+            "message": "changed
+        }
         */
 
         // Get details of all sub accounts
         try {
-            SubAccountFactory resp = api.getSubaccounts();
-            System.out.println(resp);  
-            //  Print the total number of apps
-            System.out.println("Total count : " + resp.meta.totalCount);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            ListResponse < Subaccount > response = Subaccount.lister()
+                .offset(0)
+                .limit(5)
+                .list();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
 
         /*
         Sample Output
-        SubAccountFactory [
-            serverCode=200, 
-            meta=SubAccountMeta [
-                previous=null, 
-                totalCount=2, 
-                offset=0, 
-                limit=20, 
-                next=null
-            ], 
-            error=null, 
-            apiId=e19cb51c-c725-11e4-9107-22000afaaa90, 
-            subAccountList=[
-                SubAccount [
-                    account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
-                    error=null, apiId=null, 
-                    authId=SAM2IYMJUWODK2ZGMWOW, 
-                    authToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
-                    newAuthToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
-                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SAM2IYMJUWODK2ZGMWOW/, 
-                    createdOn=2015-03-10, 
-                    isEnabled=false, 
-                    lastModifiedOn=null, 
-                    name=Testing001, 
-                    message=null
-                ], SubAccount [
-                    account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
-                    error=null, 
-                    apiId=null, 
-                    authId=SANTNKM2M4ZMFJOGVKYZ, 
-                    authToken=YTYxMjY0YTlhNDMzMjMwYmVkZmQ4ZDk1ODdlZTI1, 
-                    newAuthToken=YTYxMjY0YTlhNDMzMjMwYmVkZmQ4ZDk1ODdlZTI1, 
-                    resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SANTNKM2M4ZMFJOGVKYZ/, 
-                    createdOn=2015-03-10, 
-                    isEnabled=true, 
-                    lastModifiedOn=null, 
-                    name=Testing, 
-                    message=null
-                ]
+       {
+           "api_id": "a8f72696-3396-11eb-8d38-0242ac110002",
+           "meta": {
+               "limit": 5,
+                "next": null,
+                "offset": 0,
+                "previous": null,
+                "total_count": 4
+            },
+            "objects": [{
+                "account": "/v1/Account/MXXXXXXXXXXXXXXXX/",
+                "auth_id": "SAXXXXXXXXXXXXXXXXXX",
+                "auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "created": "2020-12-01",
+                "enabled": true,
+                "modified": "2020-12-01",
+                "name": "Updated Subaccount Name",
+                "new_auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "resource_uri": "/v1/Account/MXXXXXXXXXXXXXXXX/Subaccount/SAXXXXXXXXXXXXXXXXXX/"
+            },
+            {
+                "account": "/v1/Account/MXXXXXXXXXXXXXXXX/",
+                "auth_id": "SAXXXXXXXXXXXXXXXXXX",
+                "auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "created": "2020-02-01",
+                "enabled": false,
+                "modified": "2020-10-02",
+                "name": "Test 2",
+                "new_auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "resource_uri": "/v1/Account/MXXXXXXXXXXXXXXXX/Subaccount/SAXXXXXXXXXXXXXXXXXX/"
+            },
+            {
+                "account": "/v1/Account/MXXXXXXXXXXXXXXXX/",
+                "auth_id": "SAXXXXXXXXXXXXXXXXXX",
+                "auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "created": "2019-07-05",
+                "enabled": false,
+                "modified": "2020-09-29",
+                "name": "account1",
+                "new_auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "resource_uri": "/v1/Account/MXXXXXXXXXXXXXXXX/Subaccount/SAXXXXXXXXXXXXXXXXXX/"
+            },
+            {
+                "account": "/v1/Account/MXXXXXXXXXXXXXXXX/",
+                "auth_id": "SAXXXXXXXXXXXXXXXXXX",
+                "auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "created": "2020-02-01",
+                "enabled": true,
+                "modified": null,
+                "name": "suprabha",
+                "new_auth_token": "OGXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+                "resource_uri": "/v1/Account/MXXXXXXXXXXXXXXXX/Subaccount/SAXXXXXXXXXXXXXXXXXX/"
+            }
             ]
-        ]
-        Total count : 2
+        }
         */
 
         // Get details of a particular sub acount
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("subauth_id","SANJEYZGU1NWQ4YMQ1Y2");
- 
         try {
-            SubAccount resp = api.getSubaccount(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            Subaccount response = Subaccount.getter("SAXXXXXXXXXXXXXXXXXX") // Auth_id of the subaccount to be retrieved.
+                .get();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
         /*
         Sample Output
-        SubAccount [
-            account=/v1/Account/XXXXXXXXXXXXXXXXX/, 
-            error=null, 
-            apiId=580f06b4-c726-11e4-8ccf-22000afb14f7, 
-            authId=SANJEYZGU1NWQ4YMQ1Y2, 
-            authToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
-            newAuthToken=YjllZWNhYzk5ZDhjZjhmMTRkMjJlOTY1ZDJjYmQx, 
-            resourceUri=/v1/Account/XXXXXXXXXXXXXXXXX/Subaccount/SANJEYZGU1NWQ4YMQ1Y2/, 
-            createdOn=2015-03-10, 
-            isEnabled=false, 
-            lastModifiedOn=null, 
-            name=Testing001,
-            message=null
-        ]
+        {
+            "account": "/v1/Account/MAXXXXXXXXXXXXXXXX/",
+            "api_id": "ba559962-3397-11eb-9434-0242ac110003",
+            "auth_id": "SAXXXXXXXXXXXXXXXXXX",
+            "auth_token": "OGxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "created": "2020-12-01",
+            "enabled": true,
+            "modified": "2020-12-01",
+            "name": "Updated Subaccount Name",
+            "new_auth_token": "OGxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "resource_uri": "/v1/Account/MAXXXXXXXXXXXXXXXX/Subaccount/SAXXXXXXXXXXXXXXXXXX/"
+        }
         */
 
         // Delete a sub account
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("subauth_id","SANJEYZGU1NWQ4YMQ1Y2");
-
         try {
-            GenericResponse resp = api.deleteSubaccount(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){
-            System.out.println(e.getLocalizedMessage());
+            Subaccount.deleter("SAXXXXXXXXXXXXXXXXXX").cascade(true)
+                .delete();
+
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
         }
-        
+
         /*
         Sample Output
-        GenericResponse [
-            serverCode=204, 
-            message=no response, 
-            error=null, 
-            apiId=unknown
-        ]
+            No response
 
         Unsuccessful Output
-        GenericResponse [
-            serverCode=404, 
-            message=null, 
-            error=not found, 
-            apiId=a293684c-c726-11e4-b423-22000ac8a2f8
-        ]
+            message: invalid subaccount ID
         */
     }
 }

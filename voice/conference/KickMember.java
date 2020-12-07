@@ -1,42 +1,33 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
+import com.plivo.api.models.conference.ConferenceMemberActionResponse;
 
-import java.util.LinkedHashMap;
+class KickCreate {
+    public static void main(String [] args) {
+        Plivo.init("MAMDC1NTE3ZGQ4NWNJNM","NWYzOGM1NTAyYmMzZTFmMjYzZTRmZDA1NWZlNDM5");
+        try {
+            ConferenceMemberActionResponse response = Conference.memberKicker(
+						"Sample_Room", // Conference room name
+						"25854" // Member_id to be kicked
+						)
+                    .kick();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class KickMember {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		
-		/**
-		 * params : member_id - one single id
-		 * 						multiple member ids delimited by ','
-		 * 						'all' - to kick all members of conference 
-		 */
-		
-		params.put("conference_name", "1234");
-		params.put("member_id", "1,2,3");
-		
-		GenericResponse response = new GenericResponse();
-		try 
-		{
-			response =  restAPI.kickMember(params);
-			System.out.println(response.apiId);
-		}
-		catch (PlivoException plivoException) 
-		{
-			plivoException.printStackTrace();
-		}
-		
-	}
-
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+{
+  "api_id": "1ba6dc29-35e1-11eb-83e5-0242ac110006",
+  "member_id": [
+    "25854"
+  ],
+  "message": "kicked"
+}
+*/

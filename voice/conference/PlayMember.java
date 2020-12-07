@@ -1,38 +1,34 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
+import com.plivo.api.models.conference.ConferenceMemberActionResponse;
 
-import java.util.LinkedHashMap;
+class PlayCreate {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            ConferenceMemberActionResponse response = Conference.memberPlayer(
+						"Sample_Room", // Conference room name
+						"56842", // Conference member_id for which the audio will be played.
+						"https://s3.amazonaws.com/plivocloud/Trumpet.mp3" // URL of the audio
+						)
+                    .create();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class PlayMember {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		
-		params.put("conference_name", "1234");
-		params.put("member_id", "1,2");  /* single member_id or multiple or 'all' */
-		params.put("url", "http:/mystorageserver/music.mp3");
-		
-		GenericResponse response = new GenericResponse();
-		
-		try 
-		{
-			response = restAPI.playMember(params);
-			System.out.println(response.apiId);
-		}
-		catch (PlivoException plivoException) {
-			
-			plivoException.printStackTrace();
-		}
-		
-	}
-
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+{
+  "api_id": "d1b4073d-35e2-11eb-a8d3-0242ac110005",
+  "member_id": [
+    "56842"
+  ],
+  "message": "play queued into conference"
+}
+*/

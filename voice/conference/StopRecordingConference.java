@@ -1,36 +1,28 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
 
-import java.util.LinkedHashMap;
+class RecordDelete {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            Conference.recordStopper("Sample_Room") // Name of the conference room where recording has to be stopped.
+                    .stop();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-
-public class StopRecordingConference {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-	
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-
-		params.put("conference_name", "1234");
-		
-		GenericResponse response = new GenericResponse();
-		
-		try
-		{
-			response = restAPI.stopRecordConference(params);
-			System.out.println(response.apiId);
-		} 
-		catch (PlivoException plivoException) 
-		{
-			plivoException.printStackTrace();
-		}
-	}
-
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+serverCode=204
+message=no response
+error=null
+apiId=unknown
+
+Deleted successfully.
+*/

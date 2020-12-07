@@ -1,93 +1,336 @@
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import java.util.LinkedHashMap;
-
-import com.plivo.helper.api.client.*;
-import com.plivo.helper.api.response.pricing.PlivoPricing;
-import com.plivo.helper.exception.PlivoException;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.pricing.Pricing;
 
 public class App {
 
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String [] args) {
 
-        String auth_id = "Your AUTH_ID";
-        String auth_token = "Your AUTH_TOKEN";
-        
-        RestAPI api = new RestAPI(auth_id, auth_token, "v1");
 
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("country_iso","GB");
+        String auth_id = "YOUR_AUTH_ID";
+        String auth_token = "YOUR_AUTH_TOKEN";
+
+        Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
 
         try {
-            PlivoPricing resp = api.getPricing(parameters);
-            System.out.println(resp);
-        }catch (PlivoException e){  
-            System.out.println(e.getLocalizedMessage());
-        }   
+            Pricing response = Pricing.getter("GB")
+                    .get();
+
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
 
         /*
         Sample Output
-        PlivoPricing [
-            serverCode=200, 
-            countryCode=44, 
-            countryIso=GB, 
-            country=United Kingdom, 
-            apiId=8fd1f5a4-c71a-11e4-b932-22000ac50fac, 
-            phoneNumbers=PhoneNumbers [
-                localMonthlyRental=LocalNumberRental [rate=0.80000], 
-                tollfreeMonthlyRental=TollFreeNumberRental [rate=1.40000]], 
-                voiceRates=VoiceRates [
-                    voiceInbound=InboundVoicePricing [
-                        localInbound=LocalInboundPricing [rate=0.00500], 
-                        tollfreeInbound=TollfreeInboundPricing [rate=0.05000], 
-                        ipInboundRate=SipInboundPricing [rate=0.00300]
-                    ], 
-                    voiceOutbound=OutboundVoicePricing [
-                        localOutbound=LocalOutboundPricing [rate=0.01020], 
-                        tollfreeOutbound=TollfreeOutboundPricing [rate=null], 
-                        ipOutbound=SipOutboundPricing [rate=0.00300], 
-                        prefixesRates=[
-                            RatesPrefixes [
-                                rate=0.01020, 
-                                numberPrefixes=[44, 44203, 44207, 44208]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.01700, 
-                                numberPrefixes=[443, 44551107, 4455114, 445516, 44555500, 4455551, 4455553, 447989, 447990, 447999]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.16520, 
-                                numberPrefixes=[44843, 44844, 44845]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.22350, 
-                                numberPrefixes=[44870]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.32010, 
-                                numberPrefixes=[44871, 44872, 44873]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.40880, 
-                                numberPrefixes=[4478360, 4478361, 4478369]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.42870, 
-                                numberPrefixes=[447]
-                            ], 
-                            RatesPrefixes [
-                                rate=0.44030, numberPrefixes=[4470]
-                            ]
-                        ]
+        {
+            "api_id": "bebad17e-3398-11eb-9434-0242ac110003",
+            "country": "United Kingdom",
+            "country_code": 44,
+            "country_iso": "GB",
+            "message": {
+                "inbound": {
+                    "rate": "0.00000"
+                },
+                "outbound": {
+                    "rate": null
+                },
+                "outbound_networks_list": []
+            },
+            "mms": {
+                "inbound": {
+                    "rate": null
+                },
+                "outbound": {
+                    "rate": null
+                },
+                "outbound_networks_list": []
+            },
+            "phone_numbers": {
+                "local": {
+                    "rate": "0.85000",
+                    "rates": [{
+                            "capabilities": [
+                                "sms",
+                                "voice"
+                            ],
+                            "rental_rate": "0.85000",
+                            "setup_rate": "0.00000"
+                        },
+                        {
+                            "capabilities": [
+                                "voice"
+                            ],
+                            "rental_rate": "0.85000",
+                            "setup_rate": "0.00000"
+                        }
                     ]
-                ], 
-                smsRates=SmsRates [
-                    inboundSms=InboundSmsPricing [rate=0.00000], 
-                    outboundSms=OutboundSmsPricing [rate=0.03680]
-                ]
-            ]
-        ]
+                },
+                "mobile": {
+                    "rate": "0.85000",
+                    "rates": [{
+                        "capabilities": [
+                            "sms",
+                            "voice"
+                        ],
+                        "rental_rate": "0.85000",
+                        "setup_rate": "0.00000"
+                    }]
+                },
+                "tollfree": {
+                    "rate": "1.70000",
+                    "rates": [{
+                        "capabilities": [
+                            "voice"
+                        ],
+                        "rental_rate": "1.70000",
+                        "setup_rate": "0.00000"
+                    }]
+                }
+            },
+            "voice": {
+                "inbound": {
+                    "ip": {
+                        "rate": "0.00300"
+                    },
+                    "local": {
+                        "rate": "0.00850"
+                    },
+                    "tollfree": {
+                        "rate": "0.04890"
+                    }
+                },
+                "outbound": {
+                    "ip": {
+                        "rate": "0.00300"
+                    },
+                    "local": {
+                        "rate": "0.01550"
+                    },
+                    "rates": [{
+                            "prefix": [
+                                "4470",
+                                "4474410"
+                            ],
+                            "rate": "0.48000"
+                        },
+                        {
+                            "prefix": [
+                                "44710",
+                                "447300",
+                                "447301",
+                                "447302",
+                                "447303",
+                                "447304",
+                                "44734",
+                                "44737",
+                                "447380",
+                                "447381",
+                                "447382",
+                                "447387",
+                                "447388",
+                                "4473890",
+                                "4473891",
+                                "44739",
+                                "447400",
+                                "447401",
+                                "447402",
+                                "447403",
+                                "447407",
+                                "447409",
+                                "44741",
+                                "4474170",
+                                "4474180",
+                                "44742",
+                                "44743",
+                                "44744",
+                                "4474416",
+                                "44745",
+                                "4474527",
+                                "4474528",
+                                "4474529",
+                                "4474586",
+                                "4474589",
+                                "44746",
+                                "4474652",
+                                "4474654",
+                                "4474656",
+                                "4474657",
+                                "4474658",
+                                "4474659",
+                                "44747",
+                                "44748",
+                                "4474884",
+                                "4474885",
+                                "4474887",
+                                "4474889",
+                                "44749",
+                                "44750",
+                                "44751",
+                                "44752",
+                                "44753",
+                                "4475320",
+                                "4475321",
+                                "4475322",
+                                "4475323",
+                                "4475324",
+                                "4475326",
+                                "4475327",
+                                "4475328",
+                                "4475374",
+                                "4475378",
+                                "4475379",
+                                "44754",
+                                "44755",
+                                "44756",
+                                "44757",
+                                "44758",
+                                "44759",
+                                "44770",
+                                "44771",
+                                "44772",
+                                "44773",
+                                "44774",
+                                "44775",
+                                "44776",
+                                "44777",
+                                "44778",
+                                "44779",
+                                "44780",
+                                "44781",
+                                "44782",
+                                "4478228",
+                                "44783",
+                                "44784",
+                                "44785",
+                                "44786",
+                                "44787",
+                                "4478720",
+                                "4478721",
+                                "4478723",
+                                "4478724",
+                                "4478725",
+                                "4478726",
+                                "4478728",
+                                "4478729",
+                                "44788",
+                                "44789",
+                                "4478932",
+                                "4478934",
+                                "4478935",
+                                "4478936",
+                                "4478937",
+                                "44790",
+                                "44791",
+                                "44792",
+                                "44793",
+                                "44794",
+                                "44795",
+                                "44796",
+                                "44797",
+                                "44798",
+                                "44799"
+                            ],
+                            "rate": "0.02400"
+                        },
+                        {
+                            "prefix": [
+                                "44730",
+                                "44736",
+                                "4473780",
+                                "44738",
+                                "4473800",
+                                "4473900",
+                                "4473974",
+                                "44740",
+                                "447417",
+                                "447418",
+                                "447424",
+                                "447438",
+                                "447439",
+                                "447440",
+                                "447441",
+                                "447448",
+                                "447451",
+                                "447452",
+                                "447457",
+                                "447458",
+                                "447459",
+                                "447465",
+                                "447466",
+                                "447488",
+                                "447509",
+                                "447520",
+                                "447532",
+                                "447537",
+                                "447558",
+                                "447559",
+                                "447571",
+                                "447589",
+                                "44760",
+                                "44762",
+                                "4476606",
+                                "4476660",
+                                "4476770",
+                                "447691",
+                                "4477",
+                                "447700",
+                                "447744",
+                                "447753",
+                                "447755",
+                                "447777",
+                                "447781",
+                                "447797",
+                                "4478",
+                                "447822",
+                                "447829",
+                                "447839",
+                                "447872",
+                                "4478744",
+                                "447893",
+                                "4479",
+                                "447911",
+                                "447924",
+                                "447937",
+                                "447978"
+                            ],
+                            "rate": "0.30000"
+                        },
+                        {
+                            "prefix": [
+                                "443",
+                                "445",
+                                "4484"
+                            ],
+                            "rate": "0.03200"
+                        },
+                        {
+                            "prefix": [
+                                "44"
+                            ],
+                            "rate": "0.01550"
+                        },
+                        {
+                            "prefix": [
+                                "4487",
+                                "449"
+                            ],
+                            "rate": "0.32000"
+                        },
+                        {
+                            "prefix": [
+                                "4474582"
+                            ],
+                            "rate": "0.52000"
+                        }
+                    ],
+                    "tollfree": {
+                        "rate": null
+                    }
+                }
+            }
+        }
         */
     }
 }

@@ -1,97 +1,66 @@
-package plivoexample;
-
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.call.Call;
+import com.plivo.api.models.call.actions.CallPlayCreateResponse;
+import com.plivo.api.models.call.actions.CallRecordCreateResponse;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
+import java.util.Collections;
+import static spark.Spark.*;
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.api.response.response.GenericResponse;
-import com.plivo.helper.api.response.response.Record;
-import com.plivo.helper.exception.PlivoException;
+public class ReceiveSms {
+    public static void main(String[] args) {
+        get("/beep_detection", (request, response) -> {
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+            // The Callback URL of Dial will make a request to the Record API which will record only the B Leg
+            // Play API is invoked which will play a music only on the B Leg.
 
-public class dialOutbound extends HttpServlet {
-    private static final long serialVersionUID = 1L;    
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
-            throws ServletException, IOException {
+            String event = request.queryParams("Event");
+            String call_uuid = request.queryParams("DialBLegUUID");
 
-        // The Callback URL of Dial will make a request to the Record API which will record only the B Leg
-        // Play API is invoked which will play a music only on the B Leg.
+            if (event.equals("DialAnswer"))
+            {
+                try {
+                    CallRecordCreateResponse resp = Call.recorder(call_uuid) // ID of the call
+                            .callbackMethod("GET")
+                            .callbackUrl("http://foo.com/callback/")
+                            .record();
 
-        String event = req.getParameter("Event");
-        String call_uuid = req.getParameter("DialBLegUUID");
-        
-        if (event.equals("DialAnswer"))
-        {
-            String auth_id = "Your AUTH_ID";
-            String auth_token = "Your AUTH_TOKEN";
-            
-            RestAPI api1 = new RestAPI(authId, authToken, "v1");
-            RestAPI api2 = new RestAPI(authId, authToken, "v1");
-            
-            LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-            parameters.put("call_uuid", call_uuid); // ID of the call
-            parameters.put("callback_url", "https://dry-fortress-4047.herokuapp.com/recording_callback"); // The URL invoked by the API when the recording ends
-            parameters.put("callback_method", "GET"); // The method which is used to invoke the callback_url URL
-            
-            LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-            params.put("call_uuid", call_uuid); // ID of the call
-            params.put("urls", "https://s3.amazonaws.com/plivocloud/Trumpet.mp3"); // A single URL or a list of comma separated URLs pointing to an mp3 or wav file
-            
-            try{
-                Record record = api1.record(parameters);
-                System.out.println(getFields(record));
-                
-                GenericResponse play = api2.play(params);
-                System.out.println(getFields(play));
-            }catch (PlivoException e){  
-                System.out.println(e.getLocalizedMessage());
-            } catch (IllegalAccessException e) {
-                System.out.println(e.getLocalizedMessage());
+                    System.out.println(resp);
+                } catch (PlivoRestException | IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    CallPlayCreateResponse resp = Call.player(call_uuid, // ID of the call
+                    Collections.singletonList("https://s3.amazonaws.com/plivocloud/Trumpet.mp3"))
+                            .play();
+                    System.out.println(resp);
+                } catch (PlivoRestException | IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        else
-        {
-            System.out.println("Invalid");
-        }
+            else
+                {
+                    System.out.println("Invalid");
+                }
+            return "Excecution completed!";
+        });
     }
-    
-    public static String getFields(Object obj) throws IllegalAccessException {
-        StringBuffer buffer = new StringBuffer();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field f : fields) {
-          if (!Modifier.isStatic(f.getModifiers())) {
-            f.setAccessible(true);
-            Object value = f.get(obj);
-            buffer.append(f.getName());
-            buffer.append("=");
-            buffer.append("" + value);
-            buffer.append("\n");
-          }
-        }
-        return buffer.toString();
-   }
 }
 
 /*
 Sample Output
 
 Output of the Record API request
-api_id=5cbb3612-bb30-11e4-ac1f-22000ac51de6
-message=async api spawned
-serverCode=200
-url=null
-error=null
+{
+  "url": "http://s3.amazonaws.com/recordings_2013/48dfaf60-3b2a-11e3.mp3",
+  "message": "call recording started",
+  "recording_id": "48dfaf60-3b2a-11e3",
+  "api_id": "c7b69074-58be-11e1-86da-adf28403fe48"
+}
 
-Output of the Play XML request
-serverCode=202
-apiId=5d1a1a42-bb30-11e4-af95-22000ac54c79
-message=play started
-error=null
+Output of the Play API
+{
+  "message": "play started",
+  "api_id": "07abfd94-58c0-11e1-86da-adf28403fe48"
+}
 */

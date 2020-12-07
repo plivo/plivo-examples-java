@@ -1,28 +1,28 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
+class ConferenceDeleteAll {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            Conference.allDeleter()
+                    .delete();
 
-public class HangupAllConferences {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		GenericResponse genResponse = new GenericResponse();
-		
-		try 
-		{
-			genResponse = restAPI.hangupAllConferences();
-			System.out.println(genResponse.apiId);
-		} 
-		catch (PlivoException plivoException) {
-			plivoException.printStackTrace();
-		}
-	}
-
+            System.out.println("Deleted successfully.");
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+/*
+Sample Output
+serverCode=204
+message=no response
+error=null
+apiId=unknown
+
+Deleted successfully.
+*/

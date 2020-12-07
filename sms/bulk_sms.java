@@ -1,84 +1,83 @@
-package com.plivo.test;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
 
-import java.util.LinkedHashMap;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.message.Message;
+import com.plivo.api.models.message.MessageCreateResponse;
 
-import com.plivo.helper.api.client.*;
-
-import com.plivo.helper.api.response.message.MessageResponse;
-import com.plivo.helper.exception.PlivoException;
-
-public class BulkMessage {
-
+class MessageCreate {
     public static void main(String[] args) {
-        
-        String authId = "Your AUTH_ID";
-        String authToken = "Your AUTH_TOKEN";
-
-        RestAPI api = new RestAPI(authId, authToken, "v1");
-
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("src", "1111111111"); // Sender's phone number with country code
-        parameters.put("dst", "2222222222<3333333333"); // Receivers' phone numbers with country code. The numbers are separated by "<" delimiter.
-        parameters.put("text", "Hi, from Plivo"); // Your SMS text message
-        
+        Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
         try {
-            // Send the messages
-            MessageResponse msgResponse = api.sendMessage(parameters);
-            // Print the response
-            System.out.println(msgResponse);
-            // Loop through the Message UUID
-            if (msgResponse.serverCode == 202) {
-                int count = msgResponse.messageUuids.size();
-                for (int i = 0 ; i < count ; i++){
-                    // Print the Message UUID
-                    System.out.println("Message UUID : " + msgResponse.messageUuids.get(i).toString());
-                }
-            } else {
-                System.out.println(msgResponse.error); 
-            }
-        } catch (PlivoException e) {
-            System.out.println(e.getLocalizedMessage());
+            MessageCreateResponse response = Message.creator(
+                    "1111111111", // Sender's phone number with country code
+                    Collections.singletonList("+2222222222<+333333333"), // Receivers' phone numbers with country code. The numbers are separated by "<" delimiter.
+                    "Hello, this is test message") // Your SMS text message
+                    .url(new URL("http://foo.com/sms_status/"))
+                    .create();
+            System.out.println(response);
         }
 
-        // When an invalid number is given as dst parameter, an error will be thrown and the message will not be sent
+        catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+// Sample output
+/*
+{
+  "api_id": "6cfd111e-3558-11eb-af78-0242ac110007",
+  "message": "message(s) queued",
+  "message_uuid": [
+    "6cff70da-3558-11eb-af78-0242ac110007",
+    "6d006e9a-3558-11eb-af78-0242ac110007"
+  ]
+}
+*/
 
-        LinkedHashMap<String, String> parameters = new LinkedHashMap<String, String>();
-        parameters.put("src", "1111111111"); // Sender's phone number with country code
-        parameters.put("dst", "2222222222<33333"); // Receivers' phone numbers with country code. The numbers are separated by "<" delimiter.
-        parameters.put("text", "Hi, from Plivo"); // Your SMS text message
-        
+
+// When an invalid number is given as dst parameter, an error will be thrown and the message will not be sent
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.message.Message;
+import com.plivo.api.models.message.MessageCreateResponse;
+
+class MessageCreate {
+    public static void main(String[] args) {
+        Plivo.init("YOUR_AUTH_ID", "YOUR_AUTH_TOKEN");
         try {
-            // Send the messages
-            MessageResponse msgResponse = api.sendMessage(parameters);
-            // Print the response
-            System.out.println(msgResponse);
-        } catch (PlivoException e) {
-            System.out.println(e.getLocalizedMessage());
+            MessageCreateResponse response = Message.creator(
+                    "1111111111", // Sender's phone number with country code
+                    Collections.singletonList("+2222222222<+333333333"), // Receivers' phone numbers with country code. The numbers are separated by "<" delimiter.
+                    "Hello, this is test message") // Your SMS text message
+                    .url(new URL("http://foo.com/sms_status/"))
+                    .create();
+            System.out.println(response);
         }
 
+        catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
-// Sample output
 /*
-MessageResponse [
-    serverCode=202, 
-    message=message(s) queued, 
-    messageUuids=[7e026888-c713-11e4-a564-22000ac6807d, 7e02984e-c713-11e4-8672-22000aff09d1], 
-    error=null, 
-    apiId=7de80790-c713-11e4-b423-22000ac8a2f8
-]
-Message UUID : 7e026888-c713-11e4-a564-22000ac6807d
-Message UUID : 7e02984e-c713-11e4-8672-22000aff09d1
-
 Sample Output for invalid number
 
-MessageResponse [
-    serverCode=400, 
-    message=null, 
-    messageUuids=null, 
-    error=1111 is not a valid phone number, 
-    apiId=a7265314-c713-11e4-b423-22000ac8a2f8
-]
-1111 is not a valid phone number
+INFO: {
+  "api_id": "87ac8f1c-3558-11eb-8618-0242ac110003",
+  "invalid_number": [
+    "333333333"
+  ],
+  "message": "message(s) queued",
+  "message_uuid": [
+    "87aeb954-3558-11eb-8618-0242ac110003"
+  ]
+}
 */

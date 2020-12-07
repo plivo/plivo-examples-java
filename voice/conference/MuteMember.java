@@ -1,41 +1,34 @@
-package plivo.helper;
+import java.io.IOException;
+import com.plivo.api.Plivo;
+import com.plivo.api.exceptions.PlivoRestException;
+import com.plivo.api.models.conference.Conference;
+import com.plivo.api.models.conference.ConferenceMemberActionResponse;
 
-import java.util.LinkedHashMap;
+class MuteCreate {
+    public static void main(String [] args) {
+        Plivo.init("YOUR_AUTH_ID","YOUR_AUTH_TOKEN");
+        try {
+            ConferenceMemberActionResponse response = Conference.memberMuter(
+						"Sample_Room", // Conference room name
+						"25854" // Member_id to be muted
+						)
+                    .mute();
 
-import com.plivo.helper.api.client.RestAPI;
-import com.plivo.helper.exception.PlivoException;
-import com.plivo.helper.api.response.response.GenericResponse;
-
-public class MuteMember {
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
-		RestAPI restAPI = new RestAPI("<AUTH_ID>", "<AUTH_TOKEN>", "v1");
-		
-		LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
-		
-		/**
-		 * params : member_id - one single id
-		 * 						multiple member ids delimited by ','
-		 * 						'all' - to mute all members of conference 
-		 */
-		
-		params.put("conference_name", "1234");
-		params.put("member_id", "1,2,3");
-		
-		GenericResponse response = new GenericResponse();
-		try 
-		{
-			response =  restAPI.muteMember(params);
-			System.out.println(response.apiId);
-		}
-		catch (PlivoException plivoException) 
-		{
-			plivoException.printStackTrace();
-		}
-	}
-
+            System.out.println(response);
+        } catch (PlivoRestException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
+
+/*
+Sample Output
+{
+  "api_id": "58c53c45-35e2-11eb-a568-0242ac110008",
+  "member_id": [
+    "56842"
+  ],
+  "message": "muted"
+}
+*/
